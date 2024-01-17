@@ -10,6 +10,7 @@ import dao.FournisseurDao;
 import dao.PaiementDao;
 import dao.ProduitDao;
 import entites.Db;
+import entites.Produit;
 
 public class Main {
 	static Scanner clavier = new Scanner(System.in);
@@ -23,7 +24,7 @@ public class Main {
 			if(choix==1) {
 				listeDesProduits();
 			}else if(choix==2) {
-				// AjouterUnProduit();
+				ajouterUnProduit();
 			}else if(choix==3) {
 				// ModifierUnProduit();
 			}else if(choix==4) {
@@ -172,7 +173,37 @@ public class Main {
 
 
 // =================================== ADDING  ============================
+	public static void ajouterUnProduit(){
+		System.out.println("####### Ajouter un produit #######");
 
+		//Instanciation Objet Prod pour pouvoir le setter et l'env à la BD
+		Produit prdt = new Produit();
+		System.out.println("Titre du produit à ajouter");
+		//flash
+		clavier.nextLine();
+		prdt.setTitre(clavier.nextLine());
+		System.out.println("Prix du produit à ajouter");
+		prdt.setPrix(clavier.nextFloat());
+
+		//Afficher au user l'id_cat (clef_etr) pour qu'il choississe l'id corrspdt
+		new CategorieDao().getAllCat().forEach((cat)->{
+			System.out.println("{ id : " +cat.getId() + " : titre " +cat.getTitre() + " }");
+		});
+
+		//Demande au user l'ID du cat jusqu'à ce que l'id corresponde é l'un des ID affichés
+		int idCat;
+		do {
+			System.out.println("Saisir un des ID des catégories ci dessus");
+			idCat = clavier.nextInt();
+		} while (new CategorieDao().getCatById(idCat)==null); //redmandé si ID retourne un objet null
+
+		//On va pouvoir setter l'ID-cat de l'objet Prduit
+		prdt.setId_categorie(idCat);
+
+		//Instanciation et appel de la methode save de l'ojet Pdao pour inserer l'objt prdt setté à la BD
+		new ProduitDao().save(prdt);
+
+	}
 
 }
 
