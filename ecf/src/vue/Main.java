@@ -9,6 +9,7 @@ import dao.Entree_stockDao;
 import dao.FournisseurDao;
 import dao.PaiementDao;
 import dao.ProduitDao;
+import entites.Categorie;
 import entites.Client;
 import entites.Db;
 import entites.Produit;
@@ -226,7 +227,15 @@ public class Main {
 	}
 
 
-	public static void ajouterUneCatégorie(){}
+	public static void ajouterUneCatégorie(){
+		System.out.println("####### Ajouter une catégorie #######");
+		Categorie cat = new Categorie();
+		//flash
+		clavier.nextLine();		
+		System.out.println("Saisir titre du catégorie à ajouter");
+		cat.setTitre(clavier.nextLine());
+		new CategorieDao().save(cat);
+	}
 
 
 	public static void ajouterUnFournisseur(){}
