@@ -14,9 +14,11 @@ import dao.PaiementDao;
 import dao.ProduitDao;
 import entites.Categorie;
 import entites.Client;
+import entites.Commande;
 import entites.Db;
 import entites.Entree_stock;
 import entites.Fournisseur;
+import entites.Paiement;
 import entites.Produit;
 
 public class Main {
@@ -317,16 +319,134 @@ public class Main {
 	public static void modifierUnProduit(){}
 
 
-	public static void modifierUnClient(){}
+	public static void modifierUnClient(){
+		System.out.println("####### Modifier un Client #######");
+		System.out.println("Liste des client à Modofier exple id/prenom");
+		new ClientDao().getAllClient().forEach((cl)->{
+			System.out.println("{ id : "+cl.getId()+" , prenom :" + cl.getPrenom()+" }");
+		});
+		
+		//Verif ID saisi par user
+		int idUser;
+		do {
+			System.out.println("Donnez l'ID du client à modifier");
+			idUser = clavier.nextInt();	
+		} while (new ClientDao().getClientById(idUser)==null);
+
+		//Avec cet ID je crée un objet de type Client avec la methode getCltbyid de lobjDaoClt
+		Client clt = new ClientDao().getClientById(idUser);
+		
+		System.out.println("Voici les détails du client demandé\n"+clt);
+		System.out.println("Saisir Nom à modifier");
+		clavier.nextLine();
+		clt.setNom(clavier.nextLine());
+		System.out.println("Saisir Ville à modifier");
+		clt.setVille(clavier.nextLine());
+		System.out.println("Saisir Age à modifier");
+		clt.setAge(clavier.nextInt());
+		System.out.println("Saisir Prenom à modifier");
+		clavier.nextLine();
+		clt.setPrenom(clavier.nextLine());
+		new ClientDao().save(clt);
+	}
 
 
-	public static void modifierUneCatégorie(){}
+	public static void modifierUneCatégorie(){
+		System.out.println("####### Modifier une Catégorie #######");
+		System.out.println("Liste des Categorie à Modofier");
+		new CategorieDao().getAllCat().forEach((cat)->{
+			System.out.println("{ id : "+cat.getId()+" , titre :" + cat.getTitre()+" }");
+		});
+		
+		//Verif ID saisi par user
+		int idUser;
+		do {
+			System.out.println("Donnez l'ID du client à modifier");
+			idUser = clavier.nextInt();	
+		} while (new CategorieDao().getCatById(idUser)==null);
+
+		//Avec cet ID je crée un objet de type Catgrie avec la methode getCattbyid de lobjDao
+		Categorie cat = new CategorieDao().getCatById(idUser);
+		System.out.println("Saisir Titre à modifier");
+		clavier.nextLine();
+		cat.setTitre(clavier.nextLine());
+
+		new CategorieDao().save(cat);
+	}
 
 
-	public static void modifierUnFournisseur(){}
-	
+	public static void modifierUnFournisseur(){
+		System.out.println("####### Modifier un Fournisseur #######");
+		System.out.println("Liste des Fournisseur à Modofier");
+		new FournisseurDao().getAllFourni().forEach((fsr)->{
+			System.out.println("{ id : "+fsr.getId()+" , nom :" + fsr.getNom()+" ,ville"+fsr.getVille()+" }");
+		});
+		
+		//Verif ID saisi par user
+		int idUser;
+		do {
+			System.out.println("Donnez l'ID du Fournisseur à modifier");
+			idUser = clavier.nextInt();	
+		} while (new FournisseurDao().getfrnsrById(idUser)==null);
 
-	public static void modifierUnPaiement(){}
+		//Avec cet ID je crée un objet de type Frnsr avec la methode getFrtbyid de lobjDao
+		Fournisseur fsr = new FournisseurDao().getfrnsrById(idUser);
+		System.out.println("Saisir nom du fournisseur Max(5) carateres");			
+		String userPrt;
+		clavier.nextLine();
+		do {
+			userPrt = clavier.nextLine();
+		} while (userPrt.length() >5); 
+
+		fsr.setNom(userPrt);
+		System.out.println("Saisir ville à modifier");
+		fsr.setVille(clavier.nextLine());
+
+		new FournisseurDao().save(fsr);
+	}
+
+
+	public static void modifierUnPaiement(){
+		System.out.println("####### Modifier un Paiement #######");
+		new PaiementDao().getAllPayment().forEach((p)->{
+			System.out.println("{ id : " +p.getId() +" ,montant :"+p.getMontant()+ " }");
+		});	
+		int idP;
+		do {
+			System.out.println("Saisir un des ID du Paiement ci dessus");
+			idP = clavier.nextInt();
+		} while (new PaiementDao().getPaymtById(idP)==null);
+
+		System.out.println("Liste ID Commande à choisir impérativement pour updater");
+		new CommandeDao().getAllCmde().forEach((cmd)->System.out.println("{id :" +cmd.getId()
+		+" ,id_client : "+ cmd.getId_client()+ " }"));
+		
+		int idCmd;
+		do {
+			System.out.println("Saisir ID commande => id_facture");
+			idCmd = clavier.nextInt();
+		} while (new CommandeDao().getCmdeById(idCmd)==null);
+
+		Paiement p = new PaiementDao().getPaymtById(idP);
+
+		p.setId_facture(idCmd);
+
+		
+		System.out.println("Saisir montant à modifier");
+		p.setMontant(clavier.nextFloat());
+
+		clavier.nextLine();
+		String usrDate;
+		String fmtValid = "yyyy-mm-dd";
+		do {
+			System.out.println("Saisir une date au format (YYYY-MM-DD)");
+			usrDate = clavier.nextLine();				
+		} while (isvalidDate(usrDate, fmtValid)!=true);
+
+		p.setDateP(usrDate);
+
+		new PaiementDao().save(p);
+	}
 
 
 // =============================== FUUNCTION CONTROLLERS ============
