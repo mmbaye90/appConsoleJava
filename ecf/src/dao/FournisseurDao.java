@@ -91,7 +91,7 @@ public class FournisseurDao {
                 System.out.println("Mise à jour effectuée".toUpperCase());
             }else {
                 PreparedStatement ps  = Db.con.prepareStatement
-                ("INSERT INTO fournisseur (nom,ville) VALUES(?,?");
+                ("INSERT INTO fournisseur (nom,ville) VALUES(?,?)");
                 ps.setString(1,frsr.getNom());
                 ps.setString(2,frsr.getVille());
                 ps.executeUpdate();

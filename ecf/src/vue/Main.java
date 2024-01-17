@@ -12,6 +12,7 @@ import dao.ProduitDao;
 import entites.Categorie;
 import entites.Client;
 import entites.Db;
+import entites.Fournisseur;
 import entites.Produit;
 
 public class Main {
@@ -238,7 +239,22 @@ public class Main {
 	}
 
 
-	public static void ajouterUnFournisseur(){}
+	public static void ajouterUnFournisseur(){
+		System.out.println("####### Ajouter un Fournisseur #######");
+		Fournisseur frsr = new Fournisseur();
+		//flash
+		clavier.nextLine();	
+		System.out.println("Saisir nom du fournisseur Max(5) carateres");			
+		String userPrt;
+		do {
+			userPrt = clavier.nextLine();
+		} while (userPrt.length() >5); 
+
+		frsr.setNom(userPrt);
+		System.out.println("Saisir la ville du fournisseur");
+		frsr.setVille(clavier.nextLine());
+		new FournisseurDao().save(frsr);
+	}
 
 
 	public static void ajouterUneEntréeEnStock(){}
