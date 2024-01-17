@@ -9,6 +9,7 @@ import dao.Entree_stockDao;
 import dao.FournisseurDao;
 import dao.PaiementDao;
 import dao.ProduitDao;
+import entites.Client;
 import entites.Db;
 import entites.Produit;
 
@@ -34,7 +35,7 @@ public class Main {
 			}else if(choix==6) {
 				listeDesClients();
 			}else if(choix==7) {
-				// AjouterUnClient();
+				ajouterUnClient();
 			}else if(choix==8) {
 				// ModifierUnClient();
 			}else if(choix==9) {
@@ -47,7 +48,7 @@ public class Main {
 				listeDesCatégories();
 			}
 			else if(choix==12) {
-				// AjouterUneCatégorie();
+				ajouterUneCatégorie();
 			}
 			else if(choix==13) {
 				// ModifierUneCatégorie();
@@ -68,7 +69,7 @@ public class Main {
 				listeDesFournisseurs();
 			}
 			else if(choix==19) {
-				// AjouterUnFournisseur();
+				ajouterUnFournisseur();
 			}
 			else if(choix==20) {
 				// ModifierUnFournisseur();
@@ -83,7 +84,7 @@ public class Main {
 				listeDesEntréesEnStock();
 			}
 			else if(choix==24) {
-				// AjouterUneEntréeEnStock();
+				ajouterUneEntréeEnStock();
 			}
 			else if(choix==25) {
 				// SupprimerUneEntréeEnStock();
@@ -204,6 +205,34 @@ public class Main {
 		new ProduitDao().save(prdt);
 
 	}
+
+	public static void ajouterUnClient(){
+		System.out.println("####### Ajouter un produit #######");
+		Client clt = new Client();
+		System.out.println("Saisir nom du client à ajouter");
+		//flash
+		clavier.nextLine();		
+		clt.setNom(clavier.nextLine());
+		System.out.println("Ville du client à ajouter");
+		clt.setVille(clavier.nextLine());
+		System.out.println("Age du client à ajouter");
+		clt.setAge(clavier.nextInt());
+		//flash
+		clavier.nextLine();
+		System.out.println("Prenom du client à ajouter");
+		clt.setPrenom(clavier.nextLine());
+		//insertion
+		new ClientDao().save(clt);
+	}
+
+
+	public static void ajouterUneCatégorie(){}
+
+
+	public static void ajouterUnFournisseur(){}
+
+
+	public static void ajouterUneEntréeEnStock(){}
 
 }
 
