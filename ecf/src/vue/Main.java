@@ -38,7 +38,7 @@ public class Main {
 			}else if(choix==4) {
 				// SupprimerUnProduit();
 			}else if(choix==5) {
-				// RechercherUnProduit();
+				rechercherUnProduit();
 			}else if(choix==6) {
 				listeDesClients();
 			}else if(choix==7) {
@@ -49,7 +49,7 @@ public class Main {
 				// SupprimerUnClient();
 			}
 			else if(choix==10) {
-				// RechercherUnClient();
+				rechercherUnClient();
 			}
 			else if(choix==11) {
 				listeDesCatégories();
@@ -85,7 +85,7 @@ public class Main {
 				// SupprimerUnFournisseur();
 			}
 			else if(choix==22) {
-				// RechercherUnFournisseur();
+				rechercherUnFournisseur();
 			}
 			else if(choix==23) {
 				listeDesEntréesEnStock();
@@ -481,6 +481,14 @@ public class Main {
 		new PaiementDao().save(p);
 	}
 
+// =============================== FUUNCTION SEARCHING ===============
+	public static void rechercherUnProduit(){}
+
+
+	public static void rechercherUnClient(){}
+
+
+	public static void rechercherUnFournisseur(){}
 
 // =============================== FUUNCTION CONTROLLERS ============
 	public static boolean isvalidDate(String d ,String formatDate){
