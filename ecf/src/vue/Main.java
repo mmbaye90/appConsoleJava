@@ -14,7 +14,6 @@ import dao.PaiementDao;
 import dao.ProduitDao;
 import entites.Categorie;
 import entites.Client;
-import entites.Commande;
 import entites.Db;
 import entites.Entree_stock;
 import entites.Fournisseur;
@@ -316,7 +315,40 @@ public class Main {
 
 
 //================================ UPDATING FUNTIONS  ==============
-	public static void modifierUnProduit(){}
+	public static void modifierUnProduit(){
+		System.out.println("####### Modifier un Produit #######");
+		new ProduitDao().getAllProducts().forEach((p)->{
+			System.out.println("{ id : " +p.getId() +" ,titre :"+p.getTitre()+ " }");
+		});	
+		int idP;
+		do {
+			System.out.println("Saisir un des ID du produit ci dessus");
+			idP = clavier.nextInt();
+		} while (new PaiementDao().getPaymtById(idP)==null);
+		Produit p = new ProduitDao().getPrdtById(idP);
+		clavier.nextLine();
+		System.out.println("Saisir titre à modifier");
+		p.setTitre(clavier.nextLine());
+		System.out.println("Saisir Prix à modifier");
+		p.setPrix(clavier.nextFloat());
+
+		System.out.println("Liste ID Catégorie à choisir impérativement pour updater");
+		new CategorieDao().getAllCat().forEach((cat)->System.out.println("{id :" +cat.getId()
+		+" ,id_catégorie : "+ cat.getTitre()+ " }"));
+		
+		int idCat;
+		do {
+			System.out.println("Saisir ID Catégorie");
+			idCat = clavier.nextInt();
+		} while (new CategorieDao().getCatById(idCat)==null);
+
+		p.setId_categorie(idCat);
+		
+		System.out.println("Saisir Stock à modifier");
+		p.setStock(clavier.nextInt());
+
+		new ProduitDao().save(p);
+	}
 
 
 	public static void modifierUnClient(){
@@ -407,6 +439,7 @@ public class Main {
 
 
 	public static void modifierUnPaiement(){
+
 		System.out.println("####### Modifier un Paiement #######");
 		new PaiementDao().getAllPayment().forEach((p)->{
 			System.out.println("{ id : " +p.getId() +" ,montant :"+p.getMontant()+ " }");
