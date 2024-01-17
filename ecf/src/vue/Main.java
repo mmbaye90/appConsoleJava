@@ -1,5 +1,8 @@
 package vue;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 import dao.CategorieDao;
@@ -12,6 +15,7 @@ import dao.ProduitDao;
 import entites.Categorie;
 import entites.Client;
 import entites.Db;
+import entites.Entree_stock;
 import entites.Fournisseur;
 import entites.Produit;
 
@@ -29,7 +33,7 @@ public class Main {
 			}else if(choix==2) {
 				ajouterUnProduit();
 			}else if(choix==3) {
-				// ModifierUnProduit();
+				modifierUnProduit();
 			}else if(choix==4) {
 				// SupprimerUnProduit();
 			}else if(choix==5) {
@@ -39,7 +43,7 @@ public class Main {
 			}else if(choix==7) {
 				ajouterUnClient();
 			}else if(choix==8) {
-				// ModifierUnClient();
+				modifierUnClient();
 			}else if(choix==9) {
 				// SupprimerUnClient();
 			}
@@ -53,7 +57,7 @@ public class Main {
 				ajouterUneCatégorie();
 			}
 			else if(choix==13) {
-				// ModifierUneCatégorie();
+				modifierUneCatégorie();
 			}
 			else if(choix==14) {
 				// SupprimerUneCatégorie();
@@ -74,7 +78,7 @@ public class Main {
 				ajouterUnFournisseur();
 			}
 			else if(choix==20) {
-				// ModifierUnFournisseur();
+				modifierUnFournisseur();
 			}
 			else if(choix==21) {
 				// SupprimerUnFournisseur();
@@ -98,7 +102,7 @@ public class Main {
 				// EffectuerUnPaiement();
 			}
 			else if(choix==28) {
-				// ModifierUnPaiement();
+				modifierUnPaiement();
 			}
 			else if(choix==29) {
 				// SupprimerUnPaiement();
@@ -190,7 +194,7 @@ public class Main {
 
 		//Afficher au user l'id_cat (clef_etr) pour qu'il choississe l'id corrspdt
 		new CategorieDao().getAllCat().forEach((cat)->{
-			System.out.println("{ id : " +cat.getId() + " : titre " +cat.getTitre() + " }");
+			System.out.println("{ id : " +cat.getId() + " ,titre : " +cat.getTitre() + " }");
 		});
 
 		//Demande au user l'ID du cat jusqu'à ce que l'id corresponde é l'un des ID affichés
@@ -257,7 +261,85 @@ public class Main {
 	}
 
 
-	public static void ajouterUneEntréeEnStock(){}
+	public static void ajouterUneEntréeEnStock(){
+		System.out.println("####### Ajouter une EntreeEnStock #######");
 
+				Entree_stock Es = new Entree_stock();
+				clavier.nextLine();
+				//Afficher au user ID produits
+				System.out.println("Liste des produits");
+				new ProduitDao().getAllProducts().forEach((p)->{
+					System.out.println("{ id : " +p.getId() + " ,titre : " +p.getTitre() + " }");
+				});
+				//Verif =>Remander l'ID tant qu'il ne corresponde pas à un ID affiché
+				int idPdt;
+				do {
+					System.out.println("Saisir un des ID des pdts ci dessus");
+					idPdt = clavier.nextInt();
+				} while (new ProduitDao().getPrdtById(idPdt)==null);
+
+				//setter l'ID du prdt
+				Es.setId_produit(idPdt);
+				//Afficher au user ID fournisseur
+				System.out.println("Liste des fournisseurs");
+				new FournisseurDao().getAllFourni().forEach((frsr)->{
+					System.out.println("{ id :" +frsr.getId()+ " ,nom :" +frsr.getNom()+ " }");
+				});
+
+				//Verif =>Remander l'ID tant qu'il ne corresponde pas à un ID affiché
+				int idF;
+				do {
+					System.out.println("Saisir un des ID des Fournisseurs ci dessus");
+					idF = clavier.nextInt();
+				} while (new FournisseurDao().getfrnsrById(idF)==null);
+
+				//Setter l'ID fourn
+				Es.setId_fournisseur(idF);
+				System.out.println("Saisir la quantité");
+				Es.setQuantite(clavier.nextInt());
+
+				clavier.nextLine();
+				String usrDate;
+				String fmtValid = "yyyy-mm-dd";
+				do {
+					System.out.println("Saisir une date au format (YYYY-MM-DD)");
+					usrDate = clavier.nextLine();				
+				} while (isvalidDate(usrDate, fmtValid)!=true);
+
+				Es.setdateE(usrDate);
+
+				new Entree_stockDao().save(Es);
+	}
+
+
+
+//================================ UPDATING FUNTIONS  ==============
+	public static void modifierUnProduit(){}
+
+
+	public static void modifierUnClient(){}
+
+
+	public static void modifierUneCatégorie(){}
+
+
+	public static void modifierUnFournisseur(){}
+	
+
+	public static void modifierUnPaiement(){}
+
+
+// =============================== FUUNCTION CONTROLLERS ============
+	public static boolean isvalidDate(String d ,String formatDate){
+		SimpleDateFormat df = new SimpleDateFormat(formatDate);
+		try {
+			Date dte = df.parse(d); 
+			System.out.println(dte);
+			return true; 
+		} catch (ParseException pE) {
+			System.err.println("Erreur Format");
+            return false;
+		}
+	}
 }
 
