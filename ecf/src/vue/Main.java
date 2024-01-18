@@ -14,6 +14,7 @@ import dao.PaiementDao;
 import dao.ProduitDao;
 import entites.Categorie;
 import entites.Client;
+import entites.Commande;
 import entites.Db;
 import entites.Entree_stock;
 import entites.Fournisseur;
@@ -67,7 +68,7 @@ public class Main {
 				listeDesCommandes();
 			}
 			else if(choix==16) {
-				// PasserUneCommande();
+				passerUneCommande();
 			}
 			else if(choix==17) {
 				// SupprimerUneCommande();
@@ -232,7 +233,36 @@ public class Main {
 		new ClientDao().save(clt);
 	}
 
+    public static void passerUneCommande(){
+		System.out.println("####### Passer une Commande #######");
 
+		Commande cmde = new Commande();
+		//flash
+		clavier.nextLine();
+		String usrDate;
+		String fmtValid = "yyyy-mm-dd";
+		do {
+			System.out.println("Saisir la dateF au format (YYYY-MM-DD)");
+			usrDate = clavier.nextLine();				
+		} while (isvalidDate(usrDate, fmtValid)!=true);
+
+		cmde.setdateF(usrDate);
+		
+		// new CommandeDao().getAllCmde().forEach((c)->System.out.println("{ id :" +c.getId()+
+		// ", nom : " + c.getNom() + " }"
+		// ));
+		// int idclt;
+		// do {
+		// 	System.out.println("Saisir un des ID du client ci dessus");
+		// 	idclt = clavier.nextInt();
+		// } while (new ClientDao().getClientById(idclt)==null);
+		System.out.println("saisir id_client");
+		cmde.setId_client(clavier.nextInt());
+		// System.out.println(cmde);
+		new CommandeDao().save(cmde);
+
+		// new CommandeDao().save(cmde);
+	} 
 	public static void ajouterUneCatégorie(){
 		System.out.println("####### Ajouter une catégorie #######");
 		Categorie cat = new Categorie();
@@ -314,7 +344,7 @@ public class Main {
 
 
 
-//================================ UPDATING FUNTIONS  ==============
+//================================ UPDATING FUNCTIONS  ==============
 	public static void modifierUnProduit(){
 		System.out.println("####### Modifier un Produit #######");
 		new ProduitDao().getAllProducts().forEach((p)->{
