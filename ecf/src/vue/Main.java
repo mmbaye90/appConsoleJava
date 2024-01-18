@@ -579,33 +579,152 @@ public class Main {
 
 // ===============================  DELETING ========================
 	public static void supprimerUnProduit(){
-		// System.out.println("####### Supprimer un produit #######");
-		// ProduitDao pdao=new ProduitDao();
-		// for(Produit p:pdao.getAllProducts()) {
-		// 	System.out.println(p.getId()+" - "+p.getTitre());
-		// }
-		// System.out.println("Donnez l'id : ");
-		// int id=clavier.nextInt();
-		// Produit p=pdao.getPrdtById(id);
-		// if(p==null) {
-		// 	System.out.println("L'id n'existe pas ! ");
-		// }else {
-		// 	pdao.deletePrdtById(id);
-		// }
+		if (new ProduitDao().getAllProducts().isEmpty()) System.out.println("liste produit vide".toUpperCase());
+		else listeDesProduits();
+		int idP;
+		do {
+			System.out.println("Saisir l'ID du produit à supp");
+			idP = clavier.nextInt();
+		} while (new CategorieDao().getCatById(idP)==null);
+
+		Produit prdt = new ProduitDao().getPrdtById(idP);
+
+		System.out.println("ATTENTION LES détails et les En_stck ASS SERt SUP 1(CONF)/0(ANN)");
+
+		int resp = clavier.nextInt();
+		if (resp ==1) new ProduitDao().deletePrdtById(prdt.getId());
+		else if (resp ==0) {
+			System.out.println("NON SUPP");
+			menu();
+		}		
 
 	}
 
-	public static void supprimerUnClient(){}
+	public static void supprimerUnClient(){
+		listeDesClients();
+		int idC;
+		do {
+			System.out.println("Saisir l'ID du client à sup");
+			idC = clavier.nextInt();
+		} while (new ClientDao().getClientById(idC)==null);
 
-	public static void supprimerUneCatégorie(){}
+		Client c = new ClientDao().getClientById(idC);
 
-	public static void supprimerUneCommande(){}
+		System.out.println("ATTENTION LES Commandes ASS SERt SUP 1(CONF)/0(ANN)".toUpperCase());
 
-	public static void supprimerUnFournisseur(){}
+		int resp = clavier.nextInt();
+		if (resp ==1) new ClientDao().deleteCltById(c.getId());
+		else if (resp ==0) {
+			System.out.println("NON SUPP");
+			menu();
+		}		
 
-	public static void supprimerUneEntréeEnStock(){}
+	}
 
-	public static void supprimerUnPaiement(){}
+	public static void supprimerUneCatégorie(){
+		listeDesCatégories();
+		int idCat;
+		do {
+			System.out.println("Saisir l'ID d'une des catégorie");
+			idCat = clavier.nextInt();
+		} while (new CategorieDao().getCatById(idCat)==null);
+
+		Categorie c = new CategorieDao().getCatById(idCat);
+
+		System.out.println("ATTENTION LES PRDTS ASS SERt SUP 1(CONF)/0(ANN)");
+
+		int resp = clavier.nextInt();
+		if (resp ==1) new CategorieDao().deleteCatById(c.getId());
+		else if (resp ==0) {
+			System.out.println("NON SUPP");
+			menu();
+		}		
+	}
+
+	public static void supprimerUneCommande(){
+		listeDesCommandes();
+		int idC;
+		do {
+			System.out.println("Saisir l'ID de la commde à sup");
+			idC = clavier.nextInt();
+		} while (new CommandeDao().getCmdeById(idC)==null);
+
+		Commande c = new CommandeDao().getCmdeById(idC);
+
+		System.out.println("ATTENTION LES pymt et les details ASS SERt SUP 1(CONF)/0(ANN)".toUpperCase());
+
+		int resp = clavier.nextInt();
+		if (resp ==1) new CommandeDao().deleteCmdeById(c.getId());
+		else if (resp ==0) {
+			System.out.println("NON SUPP");
+			menu();
+		}		
+
+	}
+
+	public static void supprimerUnFournisseur(){
+		listeDesFournisseurs();
+		int idC;
+		do {
+			System.out.println("Saisir l'ID du fournisseur à sup");
+			idC = clavier.nextInt();
+		} while (new FournisseurDao().getfrnsrById(idC)==null);
+
+		Fournisseur fsr = new FournisseurDao().getfrnsrById(idC);
+
+		System.out.println("ATTENTION LES Ent_en_Stck et les prdts du frnsr ASS SERt SUP 1(CONF)/0(ANN)".toUpperCase());
+
+		int resp = clavier.nextInt();
+		if (resp ==1) new FournisseurDao().deleteFrnrsById(fsr.getId());
+		else if (resp ==0) {
+			System.out.println("NON SUPP");
+			menu();
+		}		
+
+	}
+
+	public static void supprimerUneEntréeEnStock(){
+		listeDesEntréesEnStock();
+		int idEs;
+		do {
+			System.out.println("Saisir l'ID de l'ent_stock à sup");
+			idEs = clavier.nextInt();
+		} while (new Entree_stockDao().getEntStckById(idEs)==null);
+
+		Entree_stock Es = new Entree_stockDao().getEntStckById(idEs);
+
+		System.out.println("ATTENTION L'Entree_Stock sera SUP 1(CONF)/0(ANN)".toUpperCase());
+
+		int resp = clavier.nextInt();
+		if (resp ==1) new Entree_stockDao().deleteEntStcktById(Es.getId());
+		else if (resp ==0) {
+			System.out.println("NON SUPP");
+			menu();
+		}		
+
+	}
+
+	public static void supprimerUnPaiement(){
+		if(new PaiementDao().getAllPayment().isEmpty())System.out.println("Liste des paiements vide".toUpperCase());
+		else  listeDesPaiements();
+		int idP;
+		do {
+			System.out.println("Saisir l'ID de Paiement à sup");
+			idP = clavier.nextInt();
+		} while (new PaiementDao().getPaymtById(idP)==null);
+
+		Paiement p = new PaiementDao().getPaymtById(idP);
+
+		System.out.println("ATTENTION Le Paiement sera SUP 1(CONF)/0(ANN)".toUpperCase());
+
+		int resp = clavier.nextInt();
+		if (resp ==1) new PaiementDao().deletePymtById(p.getId());
+		else if (resp ==0) {
+			System.out.println("NON SUPP");
+			menu();
+		}		
+
+	}
 
 
 // =============================== FUUNCTION CONTROLLERS ============
