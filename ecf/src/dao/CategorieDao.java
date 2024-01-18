@@ -80,10 +80,10 @@ public void save(Categorie cat) {
 
 public void deleteCatById(int id) {
 	try {
-			PreparedStatement ps  = Db.con.prepareStatement
-            ("DELETE FROM produit WHERE id_categorie=?");
-			ps.setInt(1,id);
-			ps.executeUpdate();
+			// PreparedStatement ps  = Db.con.prepareStatement
+            // ("DELETE FROM produit WHERE id_categorie=?");
+			// ps.setInt(1,id);
+			// ps.executeUpdate();
 
             PreparedStatement ps2 = Db.con.prepareStatement
             ("DELETE FROM categorie WHERE id=?");

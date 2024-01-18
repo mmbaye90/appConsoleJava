@@ -37,7 +37,7 @@ public class Main {
 			}else if(choix==3) {
 				modifierUnProduit();
 			}else if(choix==4) {
-				// SupprimerUnProduit();
+				supprimerUnProduit();
 			}else if(choix==5) {
 				rechercherUnProduit();
 			}else if(choix==6) {
@@ -47,7 +47,7 @@ public class Main {
 			}else if(choix==8) {
 				modifierUnClient();
 			}else if(choix==9) {
-				// SupprimerUnClient();
+				supprimerUnClient();
 			}
 			else if(choix==10) {
 				rechercherUnClient();
@@ -62,16 +62,16 @@ public class Main {
 				modifierUneCatégorie();
 			}
 			else if(choix==14) {
-				// SupprimerUneCatégorie();
+				supprimerUneCatégorie();
 			}
 			else if(choix==15) {
 				listeDesCommandes();
 			}
 			else if(choix==16) {
-				passerUneCommande();
+				// passerUneCommande();
 			}
 			else if(choix==17) {
-				// SupprimerUneCommande();
+				supprimerUneCommande();
 			}
 			else if(choix==18) {
 				listeDesFournisseurs();
@@ -83,7 +83,7 @@ public class Main {
 				modifierUnFournisseur();
 			}
 			else if(choix==21) {
-				// SupprimerUnFournisseur();
+				supprimerUnFournisseur();
 			}
 			else if(choix==22) {
 				rechercherUnFournisseur();
@@ -95,7 +95,7 @@ public class Main {
 				ajouterUneEntréeEnStock();
 			}
 			else if(choix==25) {
-				// SupprimerUneEntréeEnStock();
+				supprimerUneEntréeEnStock();
 			}
 			else if(choix==26) {
 				listeDesPaiements();
@@ -107,7 +107,7 @@ public class Main {
 				modifierUnPaiement();
 			}
 			else if(choix==29) {
-				// SupprimerUnPaiement();
+				supprimerUnPaiement();
 			}
 
 		}
@@ -576,6 +576,38 @@ public class Main {
 			System.out.println("{ id : " + w.getId() + " , nom : " + w.getNom() + " ,ville : "+w.getVille()+ " }");
 		});
 	}
+
+// ===============================  DELETING ========================
+	public static void supprimerUnProduit(){
+		// System.out.println("####### Supprimer un produit #######");
+		// ProduitDao pdao=new ProduitDao();
+		// for(Produit p:pdao.getAllProducts()) {
+		// 	System.out.println(p.getId()+" - "+p.getTitre());
+		// }
+		// System.out.println("Donnez l'id : ");
+		// int id=clavier.nextInt();
+		// Produit p=pdao.getPrdtById(id);
+		// if(p==null) {
+		// 	System.out.println("L'id n'existe pas ! ");
+		// }else {
+		// 	pdao.deletePrdtById(id);
+		// }
+
+	}
+
+	public static void supprimerUnClient(){}
+
+	public static void supprimerUneCatégorie(){}
+
+	public static void supprimerUneCommande(){}
+
+	public static void supprimerUnFournisseur(){}
+
+	public static void supprimerUneEntréeEnStock(){}
+
+	public static void supprimerUnPaiement(){}
+
+
 // =============================== FUUNCTION CONTROLLERS ============
 	public static boolean isvalidDate(String d ,String formatDate){
 		SimpleDateFormat df = new SimpleDateFormat(formatDate);
@@ -589,4 +621,5 @@ public class Main {
 		}
 	}
 }
+
 
