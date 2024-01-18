@@ -482,14 +482,70 @@ public class Main {
 	}
 
 // =============================== FUUNCTION SEARCHING ===============
-	public static void rechercherUnProduit(){}
+	public static void rechercherUnProduit(){
+		System.out.println("####### Rechercher un Produit #######");
+		String wUser;
+        boolean continuer=true;
+		//flash
+		clavier.nextLine();
+        do{
+			System.out.println("Saisir le titre du Produit");
+			wUser =clavier.nextLine();
+
+			//Sortir de la boucle si le wUser correspond au regex
+            if(wUser.matches("[a-zA-Z]")) continuer=false;//Regex=> toutes les lettres  min et maj
+        }while(continuer);
+
+		new ProduitDao().rechPrdct(wUser).forEach((p)->{
+			System.out.println("{ id : " +p.getId() + ",titre :" +p.getTitre() +" ,prix : "+p.getPrix()+
+				" id_cat :" + new CategorieDao().getCatById(p.getId_categorie()).getId()+ " => "+
+				new CategorieDao().getCatById(p.getId_categorie()).getTitre() + " }"
+			);
+		});
+	}
 
 
-	public static void rechercherUnClient(){}
+	public static void rechercherUnClient(){
+		System.out.println("####### Rechercher un Client #######");
+		String wUser;
+        boolean continuer=true;
+		//flash
+		clavier.nextLine();
+        do{
+			System.out.println("Saisir le nom du Client");
+			wUser =clavier.nextLine();
+
+			//Sortir de la boucle si le wUser correspond au regex
+            if(wUser.matches("[a-zA-Z]")) continuer=false;//Regex=> toutes les lettres  min et maj
+        }while(continuer);
+
+		new ClientDao().rechFrnsr(wUser).forEach((cl)->{
+			System.out.println("{ id :" +cl.getId() +" ,nom :" +cl.getNom()+
+			" ,ville :" +cl.getVille()+ " ,age :" +cl.getAge()+ " ,prénom : "+cl.getPrenom()+ " }"
+			);
+		});
+
+	}
 
 
-	public static void rechercherUnFournisseur(){}
+	public static void rechercherUnFournisseur(){
+		System.out.println("####### Rechercher un fournisseur #######");
 
+		String wUser;
+        boolean continuer=true;
+		//flash
+		clavier.nextLine();
+        do{
+			System.out.println("Saisir la ville du fournisseur");
+			wUser =clavier.nextLine();
+
+            if(wUser.matches("[a-zA-Z]")) continuer=false;//Regex=> toutes les lettres  min et maj
+        }while(continuer);
+        
+		new FournisseurDao().rechFrnsr(wUser).forEach((w)->{
+			System.out.println("{ id : " + w.getId() + " , nom : " + w.getNom() + " ,ville : "+w.getVille()+ " }");
+		});
+	}
 // =============================== FUUNCTION CONTROLLERS ============
 	public static boolean isvalidDate(String d ,String formatDate){
 		SimpleDateFormat df = new SimpleDateFormat(formatDate);
