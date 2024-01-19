@@ -138,46 +138,62 @@ public class Main {
 	public static void listeDesProduits(){
 		System.out.println("####### ProductsList ###########");
 		ProduitDao pdao = new ProduitDao();
-		pdao.getAllProducts().forEach((p)->System.out.println(p));
+		if (pdao.getAllProducts().isEmpty()) {
+			System.out.println("Liste des produits vide".toUpperCase());
+		}else pdao.getAllProducts().forEach((p)->System.out.println(p));
 	}
 
 
 	public static void listeDesClients(){
 		System.out.println("####### ClientList ###########");
-		new ClientDao().getAllClient().forEach((cl)->System.out.println(cl));;
+		if (new ClientDao().getAllClient().isEmpty()) {
+			System.out.println("Liste des clients vide".toUpperCase());
+		}else new ClientDao().getAllClient().forEach((cl)->System.out.println(cl));;
 	}
 
 
 	public static void listeDesCatégories(){
 		System.out.println("####### CategList ###########");
-		new CategorieDao().getAllCat().forEach((cat)->{
-			System.out.println(" {id : "+cat.getId() + " ,titre :" +cat.getTitre()+" ,nbPrdt : "
-			+new ProduitDao().getCountprdByIdCat(cat.getId())+" }");
-		});
+		if (new CategorieDao().getAllCat().isEmpty()) {
+			System.out.println("Liste des catégorie vide");
+		}else{
+			new CategorieDao().getAllCat().forEach((cat)->{
+				System.out.println(" {id : "+cat.getId() + " ,titre :" +cat.getTitre()+" ,nbPrdt : "
+				+new ProduitDao().getCountprdByIdCat(cat.getId())+" }");
+			});	
+		}
 	}
 
 
 	public static void listeDesCommandes(){
 		System.out.println("####### ComdList ###########");
-		new CommandeDao().getAllCmde().forEach((cmd)->System.out.println(cmd));
+		if (new CommandeDao().getAllCmde().isEmpty()) {
+			System.out.println("Liste des Commandes vide");
+		}else new CommandeDao().getAllCmde().forEach((cmd)->System.out.println(cmd));
 	}
 
 
 	public static void listeDesFournisseurs(){
 		System.out.println("####### FournisList ###########");
-		new FournisseurDao().getAllFourni().forEach((fnr)-> System.out.println(fnr));
+		if(new FournisseurDao().getAllFourni().isEmpty()){
+			System.out.println("Liste des Fournisseurs vide");
+		}else new FournisseurDao().getAllFourni().forEach((fnr)-> System.out.println(fnr));
 	}
 
 
 	public static void listeDesEntréesEnStock(){
 		System.out.println("####### EntStockList ###########");
-		new Entree_stockDao().getAllEntStock().forEach((Es)-> System.out.println(Es));
+		if (new Entree_stockDao().getAllEntStock().isEmpty()) {
+			System.out.println("liste des entrées en stock vide");
+		}else new Entree_stockDao().getAllEntStock().forEach((Es)-> System.out.println(Es));
 	}
 
 
 	public static void listeDesPaiements(){
 		System.out.println("####### PymtList ###########");
-		new PaiementDao().getAllPayment().forEach((pyt)->System.out.println(pyt));
+		if(new PaiementDao().getAllPayment().isEmpty()){
+			System.out.println("Liste des paiements vide");
+		}else new PaiementDao().getAllPayment().forEach((pyt)->System.out.println(pyt));
 	}
 
 
