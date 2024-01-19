@@ -201,7 +201,6 @@ public class Main {
 	public static void ajouterUnProduit(){
 		System.out.println("####### Ajouter un produit #######");
 
-		//Instanciation Objet Prod pour pouvoir le setter et l'env à la BD
 		Produit prdt = new Produit();
 		System.out.println("Titre du produit à ajouter");
 		//flash
@@ -210,22 +209,18 @@ public class Main {
 		System.out.println("Prix du produit à ajouter");
 		prdt.setPrix(clavier.nextFloat());
 
-		//Afficher au user l'id_cat (clef_etr) pour qu'il choississe l'id corrspdt
 		new CategorieDao().getAllCat().forEach((cat)->{
 			System.out.println("{ id : " +cat.getId() + " ,titre : " +cat.getTitre() + " }");
 		});
 
-		//Demande au user l'ID du cat jusqu'à ce que l'id corresponde é l'un des ID affichés
 		int idCat;
 		do {
 			System.out.println("Saisir un des ID des catégories ci dessus");
 			idCat = clavier.nextInt();
 		} while (new CategorieDao().getCatById(idCat)==null); //redmandé si ID retourne un objet null
 
-		//On va pouvoir setter l'ID-cat de l'objet Prduit
 		prdt.setId_categorie(idCat);
 
-		//Instanciation et appel de la methode save de l'ojet Pdao pour inserer l'objt prdt setté à la BD
 		new ProduitDao().save(prdt);
 
 	}
@@ -237,8 +232,10 @@ public class Main {
 		//flash
 		clavier.nextLine();		
 		clt.setNom(clavier.nextLine());
+
 		System.out.println("Ville du client à ajouter");
 		clt.setVille(clavier.nextLine());
+
 		System.out.println("Age du client à ajouter");
 		clt.setAge(clavier.nextInt());
 		//flash
@@ -254,9 +251,10 @@ public class Main {
 		Commande cmd = new Commande();
 
 		System.out.println("####### Passer une Commande #######");
-		// Commande cmd = new Commande();
 		//flash
 		clavier.nextLine();
+		
+		//Vérification de la date si elle correspond au bon format de la BD
 		String usrDate;
 		String fmtValid = "yyyy-mm-dd";
 		do {
@@ -266,28 +264,28 @@ public class Main {
 
 		cmd.setDateF(usrDate);
 
-		System.out.println("===== Liste ID_Clt=========");
+		System.out.println("===== Liste des ID des clients =========");
 		new ClientDao().getAllClient().forEach((cl)->{
 			System.out.println("{id : " + cl.getId()+ ",prénom :" +cl.getPrenom()+ " }");
 		});
 
 		int idCl;
 		do {
-			System.out.println("Saisir un des ID ci-dessus");
+			System.out.println("Saisir impérativement un des ID ci-dessus".toUpperCase());
 			idCl = clavier.nextInt();
 		} while (new ClientDao().getClientById(idCl)==null);
 
 		cmd.setId_client(idCl);
-		System.out.println(cmd);
 		new CommandeDao().save(cmd);
 	} 
 	
 	public static void ajouterUneCatégorie(){
 		System.out.println("####### Ajouter une catégorie #######");
 		Categorie cat = new Categorie();
+
 		//flash
 		clavier.nextLine();		
-		System.out.println("Saisir titre du catégorie à ajouter");
+		System.out.println("Saisir le titre de la catégorie à ajouter");
 		cat.setTitre(clavier.nextLine());
 		new CategorieDao().save(cat);
 	}
@@ -297,7 +295,9 @@ public class Main {
 		Fournisseur frsr = new Fournisseur();
 		//flash
 		clavier.nextLine();	
-		System.out.println("Saisir nom du fournisseur Max(5) carateres");			
+
+		//Garantir la conformité de la longueur des chaines de caract de la BD
+		System.out.println("Saisir le nom du fournisseur maximum(5) carateres");			
 		String userPrt;
 		do {
 			userPrt = clavier.nextLine();
@@ -311,10 +311,7 @@ public class Main {
 
 	public static void effectuerUnPaiement(){
 		System.out.println("############# Effectuer un paiement ###############");
-		if (new CommandeDao().getAllCmde().isEmpty()) {
-			System.out.println("liste de Facture ou Cmde vide".toUpperCase());
-		}
-		else {
+
 			listeDesCommandes();
 
 			int idC;
@@ -326,12 +323,14 @@ public class Main {
 			Paiement p = new Paiement();
 			p.setId_facture(idC);
 			
+			//Vérifier si le montant n'est pas négatif ou égal 0
 			float mont;
 			do {
 				System.out.println("Saisir le montant");
 				mont = clavier.nextFloat();
 			} while (mont<0 ||mont==0);
 			p.setMontant(mont);
+			
 			//flash
 			clavier.nextLine();
 			String usrDate;
@@ -344,7 +343,6 @@ public class Main {
 			p.setDateP(usrDate);
 
 			new PaiementDao().save(p);
-		};
 
 	}
 
@@ -353,35 +351,33 @@ public class Main {
 
 				Entree_stock Es = new Entree_stock();
 				clavier.nextLine();
+
 				//Afficher au user ID produits
 				System.out.println("Liste des produits");
 				new ProduitDao().getAllProducts().forEach((p)->{
 					System.out.println("{ id : " +p.getId() + " ,titre : " +p.getTitre() + " }");
 				});
-				//Verif =>Remander l'ID tant qu'il ne corresponde pas à un ID affiché
+
 				int idPdt;
 				do {
-					System.out.println("Saisir un des ID des pdts ci dessus");
+					System.out.println("Saisir impérativement un des ID des produits ci dessus".toUpperCase());
 					idPdt = clavier.nextInt();
 				} while (new ProduitDao().getPrdtById(idPdt)==null);
-
-				//setter l'ID du prdt
 				Es.setId_produit(idPdt);
-				//Afficher au user ID fournisseur
+
+				//Afficher au user ID des fournisseurs
 				System.out.println("Liste des fournisseurs");
 				new FournisseurDao().getAllFourni().forEach((frsr)->{
 					System.out.println("{ id :" +frsr.getId()+ " ,nom :" +frsr.getNom()+ " }");
 				});
 
-				//Verif =>Remander l'ID tant qu'il ne corresponde pas à un ID affiché
 				int idF;
 				do {
-					System.out.println("Saisir un des ID des Fournisseurs ci dessus");
+					System.out.println("Saisir impérativement un des ID des Fournisseurs ci dessus".toUpperCase());
 					idF = clavier.nextInt();
 				} while (new FournisseurDao().getfrnsrById(idF)==null);
-
-				//Setter l'ID fourn
 				Es.setId_fournisseur(idF);
+				
 				System.out.println("Saisir la quantité");
 				Es.setQuantite(clavier.nextInt());
 
