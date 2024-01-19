@@ -404,17 +404,19 @@ public class Main {
 		});	
 		int idP;
 		do {
-			System.out.println("Saisir un des ID du produit ci dessus");
+			System.out.println("Saisir impérativement un des ID du produit ci dessus".toUpperCase());
 			idP = clavier.nextInt();
-		} while (new PaiementDao().getPaymtById(idP)==null);
+		} while (new ProduitDao().getPrdtById(idP)==null);
 		Produit p = new ProduitDao().getPrdtById(idP);
+
 		clavier.nextLine();
 		System.out.println("Saisir titre à modifier");
 		p.setTitre(clavier.nextLine());
+
 		System.out.println("Saisir Prix à modifier");
 		p.setPrix(clavier.nextFloat());
 
-		System.out.println("Liste ID Catégorie à choisir impérativement pour updater");
+		System.out.println("Liste ID Catégorie à choisir impérativement pour updater".toUpperCase());
 		new CategorieDao().getAllCat().forEach((cat)->System.out.println("{id :" +cat.getId()
 		+" ,id_catégorie : "+ cat.getTitre()+ " }"));
 		
@@ -447,40 +449,44 @@ public class Main {
 			idUser = clavier.nextInt();	
 		} while (new ClientDao().getClientById(idUser)==null);
 
-		//Avec cet ID je crée un objet de type Client avec la methode getCltbyid de lobjDaoClt
 		Client clt = new ClientDao().getClientById(idUser);
 		
 		System.out.println("Voici les détails du client demandé\n"+clt);
 		System.out.println("Saisir Nom à modifier");
+
 		clavier.nextLine();
 		clt.setNom(clavier.nextLine());
+
 		System.out.println("Saisir Ville à modifier");
 		clt.setVille(clavier.nextLine());
+
 		System.out.println("Saisir Age à modifier");
 		clt.setAge(clavier.nextInt());
+
 		System.out.println("Saisir Prenom à modifier");
 		clavier.nextLine();
 		clt.setPrenom(clavier.nextLine());
+
 		new ClientDao().save(clt);
 	}
 
 
 	public static void modifierUneCatégorie(){
 		System.out.println("####### Modifier une Catégorie #######");
+
 		System.out.println("Liste des Categorie à Modofier");
 		new CategorieDao().getAllCat().forEach((cat)->{
 			System.out.println("{ id : "+cat.getId()+" , titre :" + cat.getTitre()+" }");
 		});
 		
-		//Verif ID saisi par user
 		int idUser;
 		do {
-			System.out.println("Donnez l'ID du client à modifier");
+			System.out.println("Saisir impérativement l'ID du titre à modifier".toUpperCase());
 			idUser = clavier.nextInt();	
 		} while (new CategorieDao().getCatById(idUser)==null);
 
-		//Avec cet ID je crée un objet de type Catgrie avec la methode getCattbyid de lobjDao
 		Categorie cat = new CategorieDao().getCatById(idUser);
+
 		System.out.println("Saisir Titre à modifier");
 		clavier.nextLine();
 		cat.setTitre(clavier.nextLine());
@@ -496,16 +502,15 @@ public class Main {
 			System.out.println("{ id : "+fsr.getId()+" , nom :" + fsr.getNom()+" ,ville"+fsr.getVille()+" }");
 		});
 		
-		//Verif ID saisi par user
 		int idUser;
 		do {
-			System.out.println("Donnez l'ID du Fournisseur à modifier");
+			System.out.println("Saisir impérativement l'ID du Fournisseur à modifier".toUpperCase());
 			idUser = clavier.nextInt();	
 		} while (new FournisseurDao().getfrnsrById(idUser)==null);
 
-		//Avec cet ID je crée un objet de type Frnsr avec la methode getFrtbyid de lobjDao
 		Fournisseur fsr = new FournisseurDao().getfrnsrById(idUser);
-		System.out.println("Saisir nom du fournisseur Max(5) carateres");			
+
+		System.out.println("Saisir nom du fournisseur: Max(5) carateres");			
 		String userPrt;
 		clavier.nextLine();
 		do {
@@ -523,32 +528,35 @@ public class Main {
 	public static void modifierUnPaiement(){
 
 		System.out.println("####### Modifier un Paiement #######");
-		new PaiementDao().getAllPayment().forEach((p)->{
-			System.out.println("{ id : " +p.getId() +" ,montant :"+p.getMontant()+ " }");
-		});	
+		listeDesPaiements();
 		int idP;
 		do {
-			System.out.println("Saisir un des ID du Paiement ci dessus");
+			System.out.println("Saisir impérativement un des ID du paiement ci dessus".toUpperCase());
 			idP = clavier.nextInt();
 		} while (new PaiementDao().getPaymtById(idP)==null);
-
-		System.out.println("Liste ID Commande à choisir impérativement pour updater");
-		new CommandeDao().getAllCmde().forEach((cmd)->System.out.println("{id :" +cmd.getId()
-		+" ,id_client : "+ cmd.getId_client()+ " }"));
-		
-		int idCmd;
-		do {
-			System.out.println("Saisir ID commande => id_facture");
-			idCmd = clavier.nextInt();
-		} while (new CommandeDao().getCmdeById(idCmd)==null);
-
 		Paiement p = new PaiementDao().getPaymtById(idP);
 
-		p.setId_facture(idCmd);
+		clavier.nextLine();
 
+		System.out.println("Liste ID Commande(id_fact) à choisir impérativement pour updater".toUpperCase());
+		new CommandeDao().getAllCmde().forEach((c)->System.out.println("{id_facture :" +c.getId()
+		+" ,dateF : "+ c.getDateF()+ " }"));
 		
-		System.out.println("Saisir montant à modifier");
-		p.setMontant(clavier.nextFloat());
+		int idC;
+		do {
+			System.out.println("Saisir ID Catégorie");
+			idC = clavier.nextInt();
+		} while (new CommandeDao().getCmdeById(idC)==null);
+
+		p.setId_facture(idC);
+		
+		float mt;
+		do {
+			System.out.println("Saisir montant à modifier");
+			mt =clavier.nextFloat();
+		} while (mt ==0 || mt <0);
+
+		p.setMontant(mt);
 
 		clavier.nextLine();
 		String usrDate;
@@ -560,7 +568,9 @@ public class Main {
 
 		p.setDateP(usrDate);
 
+
 		new PaiementDao().save(p);
+
 	}
 
 // =============================== FUUNCTION SEARCHING ===============
