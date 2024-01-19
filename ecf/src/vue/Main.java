@@ -576,19 +576,10 @@ public class Main {
 // =============================== FUUNCTION SEARCHING ===============
 	public static void rechercherUnProduit(){
 		System.out.println("####### Rechercher un Produit #######");
-		String wUser;
-        boolean continuer=true;
 		//flash
 		clavier.nextLine();
-        do{
-			System.out.println("Saisir le titre du Produit");
-			wUser =clavier.nextLine();
-
-			//Sortir de la boucle si le wUser correspond au regex
-            if(wUser.matches("[a-zA-Z]")) continuer=false;//Regex=> toutes les lettres  min et maj
-        }while(continuer);
-
-		new ProduitDao().rechPrdct(wUser).forEach((p)->{
+		System.out.println("Saisir le titre du Produit");
+		new ProduitDao().rechPrdct(clavier.nextLine()).forEach((p)->{
 			System.out.println("{ id : " +p.getId() + ",titre :" +p.getTitre() +" ,prix : "+p.getPrix()+
 				" id_cat :" + new CategorieDao().getCatById(p.getId_categorie()).getId()+ " => "+
 				new CategorieDao().getCatById(p.getId_categorie()).getTitre() + " }"
@@ -599,19 +590,12 @@ public class Main {
 
 	public static void rechercherUnClient(){
 		System.out.println("####### Rechercher un Client #######");
-		String wUser;
-        boolean continuer=true;
 		//flash
 		clavier.nextLine();
-        do{
-			System.out.println("Saisir le nom du Client");
-			wUser =clavier.nextLine();
+		
+		System.out.println("Saisir le nom du Client");
 
-			//Sortir de la boucle si le wUser correspond au regex
-            if(wUser.matches("[a-zA-Z]")) continuer=false;//Regex=> toutes les lettres  min et maj
-        }while(continuer);
-
-		new ClientDao().rechFrnsr(wUser).forEach((cl)->{
+		new ClientDao().rechFrnsr(clavier.nextLine()).forEach((cl)->{
 			System.out.println("{ id :" +cl.getId() +" ,nom :" +cl.getNom()+
 			" ,ville :" +cl.getVille()+ " ,age :" +cl.getAge()+ " ,prénom : "+cl.getPrenom()+ " }"
 			);
@@ -623,31 +607,26 @@ public class Main {
 	public static void rechercherUnFournisseur(){
 		System.out.println("####### Rechercher un fournisseur #######");
 
-		String wUser;
-        boolean continuer=true;
 		//flash
 		clavier.nextLine();
-        do{
-			System.out.println("Saisir la ville du fournisseur");
-			wUser =clavier.nextLine();
-
-            if(wUser.matches("[a-zA-Z]")) continuer=false;//Regex=> toutes les lettres  min et maj
-        }while(continuer);
+		System.out.println("Saisir la ville du fournisseur");
         
-		new FournisseurDao().rechFrnsr(wUser).forEach((w)->{
+		new FournisseurDao().rechFrnsr(clavier.nextLine()).forEach((w)->{
 			System.out.println("{ id : " + w.getId() + " , nom : " + w.getNom() + " ,ville : "+w.getVille()+ " }");
 		});
 	}
 
 // ===============================  DELETING ========================
 	public static void supprimerUnProduit(){
-		if (new ProduitDao().getAllProducts().isEmpty()) System.out.println("liste produit vide".toUpperCase());
-		else listeDesProduits();
+		if (new ProduitDao().getAllProducts().isEmpty()) {
+			menu();
+		}
+		listeDesProduits();
 		int idP;
 		do {
 			System.out.println("Saisir l'ID du produit à supp");
 			idP = clavier.nextInt();
-		} while (new CategorieDao().getCatById(idP)==null);
+		} while (new ProduitDao().getPrdtById(idP)==null);
 
 		Produit prdt = new ProduitDao().getPrdtById(idP);
 
@@ -663,6 +642,9 @@ public class Main {
 	}
 
 	public static void supprimerUnClient(){
+		if (new ClientDao().getAllClient().isEmpty()) {
+			menu();
+		}
 		listeDesClients();
 		int idC;
 		do {
@@ -684,6 +666,9 @@ public class Main {
 	}
 
 	public static void supprimerUneCatégorie(){
+		if (new CategorieDao().getAllCat().isEmpty()) {
+			menu();
+		}
 		listeDesCatégories();
 		int idCat;
 		do {
@@ -704,6 +689,9 @@ public class Main {
 	}
 
 	public static void supprimerUneCommande(){
+		if (new CommandeDao().getAllCmde().isEmpty()) {
+			menu();
+		}
 		listeDesCommandes();
 		int idC;
 		do {
@@ -725,6 +713,9 @@ public class Main {
 	}
 
 	public static void supprimerUnFournisseur(){
+		if (new FournisseurDao().getAllFourni().isEmpty()) {
+			menu();
+		}
 		listeDesFournisseurs();
 		int idC;
 		do {
@@ -746,6 +737,9 @@ public class Main {
 	}
 
 	public static void supprimerUneEntréeEnStock(){
+		if (new Entree_stockDao().getAllEntStock().isEmpty()) {
+			menu();
+		}
 		listeDesEntréesEnStock();
 		int idEs;
 		do {
@@ -767,7 +761,9 @@ public class Main {
 	}
 
 	public static void supprimerUnPaiement(){
-		if(new PaiementDao().getAllPayment().isEmpty())System.out.println("Liste des paiements vide".toUpperCase());
+		if (new PaiementDao().getAllPayment().isEmpty()) {
+			menu();
+		}
 		else  listeDesPaiements();
 		int idP;
 		do {
@@ -789,7 +785,7 @@ public class Main {
 	}
 
 
-// =============================== FUUNCTION CONTROLLERS ============
+// =============================== UTILS FUNCTIONS ============
 	public static boolean isvalidDate(String d ,String formatDate){
 		SimpleDateFormat df = new SimpleDateFormat(formatDate);
 		try {

@@ -14,7 +14,7 @@ public class ProduitDao {
 
         try {
             PreparedStatement ps = Db.con.prepareStatement
-            ("SELECT * FROM produit");
+            ("SELECT * FROM produit ");
 
             ResultSet resp = ps.executeQuery();
 
@@ -61,7 +61,7 @@ public class ProduitDao {
         ArrayList <Produit> listPrdt = new ArrayList<>();
         try {
             PreparedStatement ps = Db.con.prepareStatement
-            ("SELECT * from produit WHERE titre LIKE ?");
+            ("SELECT * from produit WHERE titre LIKE ? ORDER BY titre");
             ps.setString(1, "%"+w+"%");
             ResultSet resp = ps.executeQuery();
             while (resp.next()) {

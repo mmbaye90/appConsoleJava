@@ -58,7 +58,7 @@ public class FournisseurDao {
         ArrayList <Fournisseur> listFrnsr = new ArrayList<>();
         try {
             PreparedStatement ps = Db.con.prepareStatement
-            ("SELECT * from fournisseur WHERE ville LIKE ?");
+            ("SELECT * from fournisseur WHERE ville LIKE ? ORDER BY ville");
             ps.setString(1, "%"+w+"%");
             ResultSet resp = ps.executeQuery();
             while (resp.next()) {

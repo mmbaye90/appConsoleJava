@@ -60,7 +60,7 @@ public class ClientDao {
         ArrayList <Client> listClt = new ArrayList<>();
         try {
             PreparedStatement ps = Db.con.prepareStatement
-            ("SELECT * from client WHERE nom LIKE ?");
+            ("SELECT * from client WHERE nom LIKE ? ORDER BY nom");
             ps.setString(1, "%"+w+"%");
             ResultSet resp = ps.executeQuery();
             while (resp.next()) {
