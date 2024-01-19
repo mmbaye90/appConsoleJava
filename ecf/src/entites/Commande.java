@@ -31,11 +31,11 @@ public class Commande {
 		this.id = id;
 	}
 
-	public String getdateF() {
+	public String getDateF() {
 		return dateF;
 	}
 
-	public void setdateF(String dateF) {
+	public void setDateF(String dateF) {
 		this.dateF = dateF;
 	}
 

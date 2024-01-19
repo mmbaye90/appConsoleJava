@@ -68,7 +68,7 @@ public class PaiementDao {
                 System.out.println("Mise à jour effectuée".toUpperCase());
             }else {
                 PreparedStatement ps  = Db.con.prepareStatement
-                ("INSERT INTO client (id_facture,montant,dateP) VALUES(?,?,?)");
+                ("INSERT INTO paiement (id_facture,montant,dateP) VALUES(?,?,?)");
                 ps.setInt(1,pymt.getId_facture());
                 ps.setFloat(2,pymt.getMontant());
                 ps.setString(3,pymt.getDateP());

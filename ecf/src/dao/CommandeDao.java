@@ -21,7 +21,7 @@ public class CommandeDao {
             while (resp.next()) {
                 Commande cmde = new Commande();
                 cmde.setId(resp.getInt("id"));
-                cmde.setdateF(resp.getString("dateF"));
+                cmde.setDateF(resp.getString("dateF"));
                 cmde.setId_client(resp.getInt("id_client"));
                 listeCmde.add(cmde);
             }
@@ -41,7 +41,7 @@ public class CommandeDao {
             if (resp.next()) {
                 Commande cmde = new Commande();
                 cmde.setId(resp.getInt("id"));
-                cmde.setdateF(resp.getString("dateF"));
+                cmde.setDateF(resp.getString("dateF"));
                 cmde.setId_client(resp.getInt("id_client"));
                 return cmde;                  
             }else return null;
@@ -60,15 +60,15 @@ public class CommandeDao {
             if(cmde.getId() != 0) {
                 PreparedStatement ps  = Db.con.prepareStatement
                 ("UPDATE commande SET dateF=?,id_client=? WHERE id=?");
-                ps.setString(1,cmde.getdateF());
+                ps.setString(1,cmde.getDateF());
                 ps.setInt(2, cmde.getId_client());
                 ps.setInt(3, cmde.getId());
                 ps.executeUpdate();
                 System.out.println("Mise à jour effectuée".toUpperCase());
             }else {
                 PreparedStatement ps  = Db.con.prepareStatement
-                ("INSERT INTO client (dateF,id_client) VALUES(?,?)");
-                ps.setString(1,cmde.getdateF());
+                ("INSERT INTO commande (dateF,id_client) VALUES(?,?)");
+                ps.setString(1,cmde.getDateF());
                 ps.setInt(2,cmde.getId_client());
                 ps.executeUpdate();
                 System.out.println("insertion Réussie".toUpperCase());

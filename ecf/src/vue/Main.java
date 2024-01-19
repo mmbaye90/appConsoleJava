@@ -68,7 +68,7 @@ public class Main {
 				listeDesCommandes();
 			}
 			else if(choix==16) {
-				// passerUneCommande();
+				passerUneCommande();
 			}
 			else if(choix==17) {
 				supprimerUneCommande();
@@ -101,7 +101,7 @@ public class Main {
 				listeDesPaiements();
 			}
 			else if(choix==27) {
-				// EffectuerUnPaiement();
+				effectuerUnPaiement();
 			}
 			else if(choix==28) {
 				modifierUnPaiement();
@@ -234,9 +234,11 @@ public class Main {
 	}
 
     public static void passerUneCommande(){
-		System.out.println("####### Passer une Commande #######");
 
-		Commande cmde = new Commande();
+		Commande cmd = new Commande();
+
+		System.out.println("####### Passer une Commande #######");
+		// Commande cmd = new Commande();
 		//flash
 		clavier.nextLine();
 		String usrDate;
@@ -246,23 +248,24 @@ public class Main {
 			usrDate = clavier.nextLine();				
 		} while (isvalidDate(usrDate, fmtValid)!=true);
 
-		cmde.setdateF(usrDate);
-		
-		// new CommandeDao().getAllCmde().forEach((c)->System.out.println("{ id :" +c.getId()+
-		// ", nom : " + c.getNom() + " }"
-		// ));
-		// int idclt;
-		// do {
-		// 	System.out.println("Saisir un des ID du client ci dessus");
-		// 	idclt = clavier.nextInt();
-		// } while (new ClientDao().getClientById(idclt)==null);
-		System.out.println("saisir id_client");
-		cmde.setId_client(clavier.nextInt());
-		// System.out.println(cmde);
-		new CommandeDao().save(cmde);
+		cmd.setDateF(usrDate);
 
-		// new CommandeDao().save(cmde);
+		System.out.println("===== Liste ID_Clt=========");
+		new ClientDao().getAllClient().forEach((cl)->{
+			System.out.println("{id : " + cl.getId()+ ",prénom :" +cl.getPrenom()+ " }");
+		});
+
+		int idCl;
+		do {
+			System.out.println("Saisir un des ID ci-dessus");
+			idCl = clavier.nextInt();
+		} while (new ClientDao().getClientById(idCl)==null);
+
+		cmd.setId_client(idCl);
+		System.out.println(cmd);
+		new CommandeDao().save(cmd);
 	} 
+	
 	public static void ajouterUneCatégorie(){
 		System.out.println("####### Ajouter une catégorie #######");
 		Categorie cat = new Categorie();
@@ -272,7 +275,6 @@ public class Main {
 		cat.setTitre(clavier.nextLine());
 		new CategorieDao().save(cat);
 	}
-
 
 	public static void ajouterUnFournisseur(){
 		System.out.println("####### Ajouter un Fournisseur #######");
@@ -291,6 +293,44 @@ public class Main {
 		new FournisseurDao().save(frsr);
 	}
 
+	public static void effectuerUnPaiement(){
+		System.out.println("############# Effectuer un paiement ###############");
+		if (new CommandeDao().getAllCmde().isEmpty()) {
+			System.out.println("liste de Facture ou Cmde vide".toUpperCase());
+		}
+		else {
+			listeDesCommandes();
+
+			int idC;
+			do {
+				System.out.println("Choisir impérativement un des ID des commandes".toUpperCase());
+				idC = clavier.nextInt();				
+			} while (new CommandeDao().getCmdeById(idC) == null);
+
+			Paiement p = new Paiement();
+			p.setId_facture(idC);
+			
+			float mont;
+			do {
+				System.out.println("Saisir le montant");
+				mont = clavier.nextFloat();
+			} while (mont<0 ||mont==0);
+			p.setMontant(mont);
+			//flash
+			clavier.nextLine();
+			String usrDate;
+			String fmtValid = "yyyy-mm-dd";
+			do {
+				System.out.println("Saisir la dateF au format (YYYY-MM-DD)");
+				usrDate = clavier.nextLine();				
+			} while (isvalidDate(usrDate, fmtValid)!=true);
+	
+			p.setDateP(usrDate);
+
+			new PaiementDao().save(p);
+		};
+
+	}
 
 	public static void ajouterUneEntréeEnStock(){
 		System.out.println("####### Ajouter une EntreeEnStock #######");
