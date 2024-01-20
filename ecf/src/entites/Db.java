@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Db {
-    private static String url="jdbc:mysql://localhost:3306/ecfShop1";
+    private static String url="jdbc:mysql://localhost:3306/ecfShop2";
     private static String userName="root";
     private static String password ="";
     public static Connection con = null;
