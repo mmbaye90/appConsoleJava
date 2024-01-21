@@ -3,6 +3,7 @@ package vue;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import dao.CategorieDao;
@@ -95,23 +96,29 @@ public class Main {
 	}
 
 	public static int menu() {
-		System.out.println(
-				"""
-							############# MENU ###################################################
-							#  1- ListeDesProduits     | 11- ListeDesCatégories     | 21- SupprimerUnFournisseur
-							#  2- AjouterUnProduit	   | 12- AjouterUneCatégorie    | 22- RechercherUnFournisseur
-							#  3- ModifierUnProduit    | 13- ModifierUneCatégorie   | 23- ListeDesEntréesEnStock
-							#  4- SupprimerUnProduit   | 14- SupprimerUneCatégorie  | 24- AjouterUneEntréeEnStock
-							#  5- RechercherUnProduit  | 15- ListeDesCommandes      | 25- SupprimerUneEntréeEnStock
-							#  6- ListeDesClients      | 16- PasserUneCommande      | 26- ListeDesPaiements
-							#  7- AjouterUnClient 	   | 17- SupprimerUneCommande   | 27- EffectuerUnPaiement
-							#  8- ModifierUnClient     | 18- ListeDesFournisseurs   | 28- ModifierUnPaiement
-							#  9- SupprimerUnClient    | 19- AjouterUnFournisseur   | 29- SupprimerUnPaiement
-							#  10- RechercherUnClient  | 20- ModifierUnFournisseur  | 0- Quitter
-							############# Choix ###################################################
-						""");
-		int c = clavier.nextInt();
-		return c;
+		try {
+			System.out.println(
+					"""
+								############# MENU ###################################################
+								#  1- ListeDesProduits     | 11- ListeDesCatégories     | 21- SupprimerUnFournisseur
+								#  2- AjouterUnProduit	   | 12- AjouterUneCatégorie    | 22- RechercherUnFournisseur
+								#  3- ModifierUnProduit    | 13- ModifierUneCatégorie   | 23- ListeDesEntréesEnStock
+								#  4- SupprimerUnProduit   | 14- SupprimerUneCatégorie  | 24- AjouterUneEntréeEnStock
+								#  5- RechercherUnProduit  | 15- ListeDesCommandes      | 25- SupprimerUneEntréeEnStock
+								#  6- ListeDesClients      | 16- PasserUneCommande      | 26- ListeDesPaiements
+								#  7- AjouterUnClient 	   | 17- SupprimerUneCommande   | 27- EffectuerUnPaiement
+								#  8- ModifierUnClient     | 18- ListeDesFournisseurs   | 28- ModifierUnPaiement
+								#  9- SupprimerUnClient    | 19- AjouterUnFournisseur   | 29- SupprimerUnPaiement
+								#  10- RechercherUnClient  | 20- ModifierUnFournisseur  | 0- Quitter
+								############# Choix ###################################################
+							""");
+			int c = clavier.nextInt();
+			return c;
+
+		} catch (InputMismatchException inp) {
+			System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+			return 0;
+		}
 	}
 
 	// =================================== LISTING ============================
@@ -179,98 +186,142 @@ public class Main {
 
 	// =================================== ADDING ============================
 	public static void ajouterUnProduit() {
-		System.out.println("####### Ajouter un produit #######");
-
-		Produit prdt = new Produit();
-		System.out.println("Titre du produit à ajouter");
-		// flash
-		clavier.nextLine();
-		prdt.setTitre(clavier.nextLine());
-		System.out.println("Prix du produit à ajouter");
-		prdt.setPrix(clavier.nextFloat());
-
-		new CategorieDao().getAllCat().forEach((cat) -> {
-			System.out.println("{ id : " + cat.getId() + " ,titre : " + cat.getTitre() + " }");
-		});
-
-		int idCat;
+		boolean err;
 		do {
-			System.out.println("Saisir un des ID des catégories ci dessus");
-			idCat = clavier.nextInt();
-		} while (new CategorieDao().getCatById(idCat) == null); // redmandé si ID retourne un objet null
+			err = false;
+			try {
+				System.out.println("####### Ajouter un produit #######");
 
-		prdt.setId_categorie(idCat);
+				Produit prdt = new Produit();
+				System.out.println("Titre du produit à ajouter");
+				// flash
+				clavier.nextLine();
+				prdt.setTitre(clavier.nextLine());
+				System.out.println("Prix du produit à ajouter");
+				prdt.setPrix(clavier.nextFloat());
 
-		new ProduitDao().save(prdt);
+				new CategorieDao().getAllCat().forEach((cat) -> {
+					System.out.println("{ id : " + cat.getId() + " ,titre : " + cat.getTitre() + " }");
+				});
+
+				int idCat;
+				do {
+					System.out.println("Saisir un des ID des catégories ci dessus");
+					idCat = clavier.nextInt();
+				} while (new CategorieDao().getCatById(idCat) == null); // redmandé si ID retourne un objet null
+
+				prdt.setId_categorie(idCat);
+
+				new ProduitDao().save(prdt);
+			} catch (InputMismatchException i) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+			}
+
+		} while (err);
 
 	}
 
 	public static void ajouterUnClient() {
-		System.out.println("####### Ajouter un produit #######");
-		Client clt = new Client();
-		System.out.println("Saisir nom du client à ajouter");
-		// flash
-		clavier.nextLine();
-		clt.setNom(clavier.nextLine());
+		boolean err;
+		do {
+			try {
+				err = false;
+				System.out.println("####### Ajouter un produit #######");
+				Client clt = new Client();
+				System.out.println("Saisir nom du client à ajouter");
+				// flash
+				clavier.nextLine();
+				clt.setNom(clavier.nextLine());
 
-		System.out.println("Ville du client à ajouter");
-		clt.setVille(clavier.nextLine());
+				System.out.println("Ville du client à ajouter");
+				clt.setVille(clavier.nextLine());
 
-		System.out.println("Age du client à ajouter");
-		clt.setAge(clavier.nextInt());
-		// flash
-		clavier.nextLine();
-		System.out.println("Prenom du client à ajouter");
-		clt.setPrenom(clavier.nextLine());
-		// insertion
-		new ClientDao().save(clt);
+				System.out.println("Age du client à ajouter");
+				clt.setAge(clavier.nextInt());
+				// flash
+				clavier.nextLine();
+				System.out.println("Prenom du client à ajouter");
+				clt.setPrenom(clavier.nextLine());
+				// insertion
+				new ClientDao().save(clt);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+			}
+
+		} while (err);
 	}
 
 	public static void passerUneCommande() {
 
-		Commande cmd = new Commande();
-
-		System.out.println("####### Passer une Commande #######");
-		// flash
-		clavier.nextLine();
-
-		// Vérification de la date si elle correspond au bon format de la BD
-		String usrDate;
-		String fmtValid = "yyyy-mm-dd";
+		boolean err;
 		do {
-			System.out.println("Saisir la dateF au format (YYYY-MM-DD)");
-			usrDate = clavier.nextLine();
-		} while (isvalidDate(usrDate, fmtValid) != true);
+			try {
+				err = false;
+				Commande cmd = new Commande();
 
-		cmd.setDateF(usrDate);
+				System.out.println("####### Passer une Commande #######");
+				// flash
+				clavier.nextLine();
 
-		System.out.println("===== Liste des ID des clients =========");
-		new ClientDao().getAllClient().forEach((cl) -> {
-			System.out.println("{id : " + cl.getId() + ",prénom :" + cl.getPrenom() + " }");
-		});
+				// Vérification de la date si elle correspond au bon format de la BD
+				String usrDate;
+				String fmtValid = "yyyy-mm-dd";
+				do {
+					System.out.println("Saisir la dateF au format (YYYY-MM-DD)");
+					usrDate = clavier.nextLine();
+				} while (isvalidDate(usrDate, fmtValid) != true);
 
-		int idCl;
-		do {
-			System.out.println("Saisir impérativement un des ID ci-dessus".toUpperCase());
-			idCl = clavier.nextInt();
-		} while (new ClientDao().getClientById(idCl) == null);
+				cmd.setDateF(usrDate);
 
-		cmd.setId_client(idCl);
-		new CommandeDao().save(cmd);
+				System.out.println("===== Liste des ID des clients =========");
+				new ClientDao().getAllClient().forEach((cl) -> {
+					System.out.println("{id : " + cl.getId() + ",prénom :" + cl.getPrenom() + " }");
+				});
+
+				int idCl;
+				do {
+					System.out.println("Saisir impérativement un des ID ci-dessus".toUpperCase());
+					idCl = clavier.nextInt();
+				} while (new ClientDao().getClientById(idCl) == null);
+
+				cmd.setId_client(idCl);
+				new CommandeDao().save(cmd);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+			}
+		} while (err);
+
 	}
 
 	public static void ajouterUneCatégorie() {
-		System.out.println("####### Ajouter une catégorie #######");
-		Categorie cat = new Categorie();
 
-		// flash
-		clavier.nextLine();
-		System.out.println("Saisir le titre de la catégorie à ajouter");
-		cat.setTitre(clavier.nextLine());
-		new CategorieDao().save(cat);
+		boolean err;
+		do {
+			try {
+				err = false;
+				System.out.println("####### Ajouter une catégorie #######");
+				Categorie cat = new Categorie();
+
+				// flash
+				clavier.nextLine();
+				System.out.println("Saisir le titre de la catégorie à ajouter");
+				cat.setTitre(clavier.nextLine());
+				new CategorieDao().save(cat);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+			}
+		} while (err);
 	}
 
 	public static void ajouterUnFournisseur() {
+
 		System.out.println("####### Ajouter un Fournisseur #######");
 		Fournisseur frsr = new Fournisseur();
 		// flash
@@ -290,264 +341,351 @@ public class Main {
 	}
 
 	public static void effectuerUnPaiement() {
-		System.out.println("############# Effectuer un paiement ###############");
-
-		listeDesCommandes();
-
-		int idC;
+		boolean err;
 		do {
-			System.out.println("Choisir impérativement un des ID des commandes".toUpperCase());
-			idC = clavier.nextInt();
-		} while (new CommandeDao().getCmdeById(idC) == null);
+			err = false;
+			try {
+				System.out.println("############# Effectuer un paiement ###############");
+				listeDesCommandes();
+				int idC;
+				do {
+					System.out.println("Choisir impérativement un des ID des commandes".toUpperCase());
+					idC = clavier.nextInt();
+				} while (new CommandeDao().getCmdeById(idC) == null);
 
-		Paiement p = new Paiement();
-		p.setId_facture(idC);
+				Paiement p = new Paiement();
+				p.setId_facture(idC);
 
-		// Vérifier si le montant n'est pas négatif ou égal 0
-		float mont;
-		do {
-			System.out.println("Saisir le montant");
-			mont = clavier.nextFloat();
-		} while (mont < 0 || mont == 0);
-		p.setMontant(mont);
+				// Vérifier si le montant n'est pas négatif ou égal 0
+				float mont;
+				do {
+					System.out.println("Saisir le montant");
+					mont = clavier.nextFloat();
+				} while (mont < 0 || mont == 0);
+				p.setMontant(mont);
 
-		// flash
-		clavier.nextLine();
-		String usrDate;
-		String fmtValid = "yyyy-mm-dd";
-		do {
-			System.out.println("Saisir la dateF au format (YYYY-MM-DD)");
-			usrDate = clavier.nextLine();
-		} while (isvalidDate(usrDate, fmtValid) != true);
+				// flash
+				clavier.nextLine();
+				String usrDate;
+				String fmtValid = "yyyy-mm-dd";
+				do {
+					System.out.println("Saisir la dateF au format (YYYY-MM-DD)");
+					usrDate = clavier.nextLine();
+				} while (isvalidDate(usrDate, fmtValid) != true);
 
-		p.setDateP(usrDate);
+				p.setDateP(usrDate);
 
-		new PaiementDao().save(p);
+				new PaiementDao().save(p);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 
 	}
 
 	public static void ajouterUneEntréeEnStock() {
-		System.out.println("####### Ajouter une EntreeEnStock #######");
 
-		Entree_stock Es = new Entree_stock();
-		clavier.nextLine();
-
-		// Afficher au user ID produits
-		System.out.println("Liste des produits");
-		new ProduitDao().getAllProducts().forEach((p) -> {
-			System.out.println("{ id : " + p.getId() + " ,titre : " + p.getTitre() + " }");
-		});
-
-		int idPdt;
+		boolean err;
 		do {
-			System.out.println("Saisir impérativement un des ID des produits ci dessus".toUpperCase());
-			idPdt = clavier.nextInt();
-		} while (new ProduitDao().getPrdtById(idPdt) == null);
-		Es.setId_produit(idPdt);
+			err = false;
+			try {
+				System.out.println("####### Ajouter une EntreeEnStock #######");
 
-		// Afficher au user ID des fournisseurs
-		System.out.println("Liste des fournisseurs");
-		new FournisseurDao().getAllFourni().forEach((frsr) -> {
-			System.out.println("{ id :" + frsr.getId() + " ,nom :" + frsr.getNom() + " }");
-		});
+				Entree_stock Es = new Entree_stock();
+				clavier.nextLine();
 
-		int idF;
-		do {
-			System.out.println("Saisir impérativement un des ID des Fournisseurs ci dessus".toUpperCase());
-			idF = clavier.nextInt();
-		} while (new FournisseurDao().getfrnsrById(idF) == null);
-		Es.setId_fournisseur(idF);
+				// Afficher au user ID produits
+				System.out.println("Liste des produits");
+				new ProduitDao().getAllProducts().forEach((p) -> {
+					System.out.println("{ id : " + p.getId() + " ,titre : " + p.getTitre() + " }");
+				});
 
-		System.out.println("Saisir la quantité");
-		Es.setQuantite(clavier.nextInt());
+				int idPdt;
+				do {
+					System.out.println("Saisir impérativement un des ID des produits ci dessus".toUpperCase());
+					idPdt = clavier.nextInt();
+				} while (new ProduitDao().getPrdtById(idPdt) == null);
+				Es.setId_produit(idPdt);
 
-		clavier.nextLine();
-		String usrDate;
-		String fmtValid = "yyyy-mm-dd";
-		do {
-			System.out.println("Saisir une date au format (YYYY-MM-DD)");
-			usrDate = clavier.nextLine();
-		} while (isvalidDate(usrDate, fmtValid) != true);
+				// Afficher au user ID des fournisseurs
+				System.out.println("Liste des fournisseurs");
+				new FournisseurDao().getAllFourni().forEach((frsr) -> {
+					System.out.println("{ id :" + frsr.getId() + " ,nom :" + frsr.getNom() + " }");
+				});
 
-		Es.setdateE(usrDate);
+				int idF;
+				do {
+					System.out.println("Saisir impérativement un des ID des Fournisseurs ci dessus".toUpperCase());
+					idF = clavier.nextInt();
+				} while (new FournisseurDao().getfrnsrById(idF) == null);
+				Es.setId_fournisseur(idF);
 
-		new Entree_stockDao().save(Es);
+				System.out.println("Saisir la quantité");
+				Es.setQuantite(clavier.nextInt());
+
+				clavier.nextLine();
+				String usrDate;
+				String fmtValid = "yyyy-mm-dd";
+				do {
+					System.out.println("Saisir une date au format (YYYY-MM-DD)");
+					usrDate = clavier.nextLine();
+				} while (isvalidDate(usrDate, fmtValid) != true);
+
+				Es.setdateE(usrDate);
+
+				new Entree_stockDao().save(Es);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+			}
+		} while (err);
 	}
 
-	// ================================ UPDATING FUNCTIONS ==============
+	// ================================ UPDATING FUNCTIONS
+	// ==================================
 	public static void modifierUnProduit() {
-		System.out.println("####### Modifier un Produit #######");
-		new ProduitDao().getAllProducts().forEach((p) -> {
-			System.out.println("{ id : " + p.getId() + " ,titre :" + p.getTitre() + " }");
-		});
-		int idP;
+
+		boolean err;
 		do {
-			System.out.println("Saisir impérativement un des ID du produit ci dessus".toUpperCase());
-			idP = clavier.nextInt();
-		} while (new ProduitDao().getPrdtById(idP) == null);
-		Produit p = new ProduitDao().getPrdtById(idP);
+			err = false;
+			try {
+				System.out.println("####### Modifier un Produit #######");
+				System.out.println("Voici les Produits disponibles pour la modification");
+				new ProduitDao().getAllProducts().forEach((p) -> {
+					System.out.println("{ id : " + p.getId() + " ,titre :" + p.getTitre() + " }");
+				});
 
-		clavier.nextLine();
-		System.out.println("Saisir titre à modifier");
-		p.setTitre(clavier.nextLine());
+				int idP;
+				do {
+					System.out.println("Saisir impérativement un des ID du produit ci dessus".toUpperCase());
+					idP = clavier.nextInt();
+				} while (new ProduitDao().getPrdtById(idP) == null);
 
-		System.out.println("Saisir Prix à modifier");
-		p.setPrix(clavier.nextFloat());
+				Produit p = new ProduitDao().getPrdtById(idP);
 
-		System.out.println("Liste ID Catégorie à choisir impérativement pour updater".toUpperCase());
-		new CategorieDao().getAllCat().forEach((cat) -> System.out.println("{id :" + cat.getId()
-				+ " ,id_catégorie : " + cat.getTitre() + " }"));
+				clavier.nextLine();
+				System.out.println("Saisir titre à modifier");
+				p.setTitre(clavier.nextLine());
 
-		int idCat;
-		do {
-			System.out.println("Saisir ID Catégorie");
-			idCat = clavier.nextInt();
-		} while (new CategorieDao().getCatById(idCat) == null);
+				System.out.println("Saisir Prix à modifier");
+				p.setPrix(clavier.nextFloat());
 
-		p.setId_categorie(idCat);
+				System.out.println("Liste ID Catégorie à choisir impérativement pour updater".toUpperCase());
+				new CategorieDao().getAllCat().forEach((cat) -> System.out.println("{id :" + cat.getId()
+						+ " ,id_catégorie : " + cat.getTitre() + " }"));
 
-		System.out.println("Saisir Stock à modifier");
-		p.setStock(clavier.nextInt());
+				int idCat;
+				do {
+					System.out.println("Saisir ID Catégorie");
+					idCat = clavier.nextInt();
+				} while (new CategorieDao().getCatById(idCat) == null);
 
-		new ProduitDao().save(p);
+				p.setId_categorie(idCat);
+
+				System.out.println("Saisir Stock à modifier");
+				p.setStock(clavier.nextInt());
+
+				new ProduitDao().save(p);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 	}
 
 	public static void modifierUnClient() {
-		System.out.println("####### Modifier un Client #######");
-		System.out.println("Liste des client à Modofier exple id/prenom");
-		new ClientDao().getAllClient().forEach((cl) -> {
-			System.out.println("{ id : " + cl.getId() + " , prenom :" + cl.getPrenom() + " }");
-		});
 
-		// Verif ID saisi par user
-		int idUser;
+		boolean err;
 		do {
-			System.out.println("Donnez l'ID du client à modifier");
-			idUser = clavier.nextInt();
-		} while (new ClientDao().getClientById(idUser) == null);
+			err = false;
+			try {
+				System.out.println("####### Modifier un Client #######");
+				System.out.println("Liste des client à Modofier exple id/prenom");
+				new ClientDao().getAllClient().forEach((cl) -> {
+					System.out.println("{ id : " + cl.getId() + " , prenom :" + cl.getPrenom() + " }");
+				});
 
-		Client clt = new ClientDao().getClientById(idUser);
+				// Verif ID saisi par user
+				int idUser;
+				do {
+					System.out.println("Donnez l'ID du client à modifier");
+					idUser = clavier.nextInt();
+				} while (new ClientDao().getClientById(idUser) == null);
 
-		System.out.println("Voici les détails du client demandé\n" + clt);
-		System.out.println("Saisir Nom à modifier");
+				Client clt = new ClientDao().getClientById(idUser);
 
-		clavier.nextLine();
-		clt.setNom(clavier.nextLine());
+				System.out.println("Voici les détails du client demandé\n" + clt);
+				System.out.println("Saisir Nom à modifier");
 
-		System.out.println("Saisir Ville à modifier");
-		clt.setVille(clavier.nextLine());
+				clavier.nextLine();
+				clt.setNom(clavier.nextLine());
 
-		System.out.println("Saisir Age à modifier");
-		clt.setAge(clavier.nextInt());
+				System.out.println("Saisir Ville à modifier");
+				clt.setVille(clavier.nextLine());
 
-		System.out.println("Saisir Prenom à modifier");
-		clavier.nextLine();
-		clt.setPrenom(clavier.nextLine());
+				System.out.println("Saisir Age à modifier");
+				clt.setAge(clavier.nextInt());
 
-		new ClientDao().save(clt);
+				System.out.println("Saisir Prenom à modifier");
+				clavier.nextLine();
+				clt.setPrenom(clavier.nextLine());
+
+				new ClientDao().save(clt);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 	}
 
 	public static void modifierUneCatégorie() {
-		System.out.println("####### Modifier une Catégorie #######");
 
-		System.out.println("Liste des Categorie à Modofier");
-		new CategorieDao().getAllCat().forEach((cat) -> {
-			System.out.println("{ id : " + cat.getId() + " , titre :" + cat.getTitre() + " }");
-		});
-
-		int idUser;
+		boolean err;
 		do {
-			System.out.println("Saisir impérativement l'ID du titre à modifier".toUpperCase());
-			idUser = clavier.nextInt();
-		} while (new CategorieDao().getCatById(idUser) == null);
+			err = false;
+			try {
+				System.out.println("####### Modifier une Catégorie #######");
 
-		Categorie cat = new CategorieDao().getCatById(idUser);
+				System.out.println("Liste des Categorie à Modofier");
+				new CategorieDao().getAllCat().forEach((cat) -> {
+					System.out.println("{ id : " + cat.getId() + " , titre :" + cat.getTitre() + " }");
+				});
 
-		System.out.println("Saisir Titre à modifier");
-		clavier.nextLine();
-		cat.setTitre(clavier.nextLine());
+				int idUser;
+				do {
+					System.out.println("Saisir impérativement l'ID du titre à modifier".toUpperCase());
+					idUser = clavier.nextInt();
+				} while (new CategorieDao().getCatById(idUser) == null);
 
-		new CategorieDao().save(cat);
+				Categorie cat = new CategorieDao().getCatById(idUser);
+
+				System.out.println("Saisir Titre à modifier");
+				clavier.nextLine();
+				cat.setTitre(clavier.nextLine());
+
+				new CategorieDao().save(cat);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 	}
 
 	public static void modifierUnFournisseur() {
-		System.out.println("####### Modifier un Fournisseur #######");
-		System.out.println("Liste des Fournisseur à Modofier");
-		new FournisseurDao().getAllFourni().forEach((fsr) -> {
-			System.out.println("{ id : " + fsr.getId() + " , nom :" + fsr.getNom() + " ,ville" + fsr.getVille() + " }");
-		});
 
-		int idUser;
+		boolean err;
+
 		do {
-			System.out.println("Saisir impérativement l'ID du Fournisseur à modifier".toUpperCase());
-			idUser = clavier.nextInt();
-		} while (new FournisseurDao().getfrnsrById(idUser) == null);
+			err = false;
+			try {
+				System.out.println("####### Modifier un Fournisseur #######");
+				System.out.println("Liste des Fournisseur à Modofier");
+				new FournisseurDao().getAllFourni().forEach((fsr) -> {
+					System.out.println(
+							"{ id : " + fsr.getId() + " , nom :" + fsr.getNom() + " ,ville" + fsr.getVille() + " }");
+				});
 
-		Fournisseur fsr = new FournisseurDao().getfrnsrById(idUser);
+				int idUser;
+				do {
+					System.out.println("Saisir impérativement l'ID du Fournisseur à modifier".toUpperCase());
+					idUser = clavier.nextInt();
+				} while (new FournisseurDao().getfrnsrById(idUser) == null);
 
-		System.out.println("Saisir nom du fournisseur: Max(5) carateres");
-		String userPrt;
-		clavier.nextLine();
-		do {
-			userPrt = clavier.nextLine();
-		} while (userPrt.length() > 5);
+				Fournisseur fsr = new FournisseurDao().getfrnsrById(idUser);
 
-		fsr.setNom(userPrt);
-		System.out.println("Saisir ville à modifier");
-		fsr.setVille(clavier.nextLine());
+				System.out.println("Saisir nom du fournisseur: Max(5) carateres");
+				String userPrt;
+				clavier.nextLine();
+				do {
+					userPrt = clavier.nextLine();
+				} while (userPrt.length() > 5);
 
-		new FournisseurDao().save(fsr);
+				fsr.setNom(userPrt);
+				System.out.println("Saisir ville à modifier");
+				fsr.setVille(clavier.nextLine());
+
+				new FournisseurDao().save(fsr);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 	}
 
 	public static void modifierUnPaiement() {
 
-		System.out.println("####### Modifier un Paiement #######");
-		listeDesPaiements();
-		int idP;
+		boolean err;
 		do {
-			System.out.println("Saisir impérativement un des ID du paiement ci dessus".toUpperCase());
-			idP = clavier.nextInt();
-		} while (new PaiementDao().getPaymtById(idP) == null);
-		Paiement p = new PaiementDao().getPaymtById(idP);
+			err = false;
+			try {
+				System.out.println("####### Modifier un Paiement #######");
+				clavier.nextLine();
+				listeDesPaiements();
+				int idP;
+				do {
+					System.out.println("Saisir impérativement un des ID du paiement ci dessus".toUpperCase());
+					idP = clavier.nextInt();
+				} while (new PaiementDao().getPaymtById(idP) == null);
+				Paiement p = new PaiementDao().getPaymtById(idP);
 
-		clavier.nextLine();
+				clavier.nextLine();
 
-		System.out.println("Liste ID Commande(id_fact) à choisir impérativement pour updater".toUpperCase());
-		new CommandeDao().getAllCmde().forEach((c) -> System.out.println("{id_facture :" + c.getId()
-				+ " ,dateF : " + c.getDateF() + " }"));
+				System.out.println("Liste ID Commande(id_fact) à choisir impérativement pour updater".toUpperCase());
+				new CommandeDao().getAllCmde().forEach((c) -> System.out.println("{id_facture :" + c.getId()
+						+ " ,dateF : " + c.getDateF() + " }"));
 
-		int idC;
-		do {
-			System.out.println("Saisir ID Catégorie");
-			idC = clavier.nextInt();
-		} while (new CommandeDao().getCmdeById(idC) == null);
+				int idC;
+				do {
+					System.out.println("Saisir ID Commande");
+					idC = clavier.nextInt();
+				} while (new CommandeDao().getCmdeById(idC) == null);
 
-		p.setId_facture(idC);
+				p.setId_facture(idC);
 
-		float mt;
-		do {
-			System.out.println("Saisir montant à modifier");
-			mt = clavier.nextFloat();
-		} while (mt == 0 || mt < 0);
+				float mt;
+				do {
+					System.out.println("Saisir montant à modifier");
+					mt = clavier.nextFloat();
+				} while (mt == 0 || mt < 0);
 
-		p.setMontant(mt);
+				p.setMontant(mt);
 
-		clavier.nextLine();
-		String usrDate;
-		String fmtValid = "yyyy-mm-dd";
-		do {
-			System.out.println("Saisir une date au format (YYYY-MM-DD)");
-			usrDate = clavier.nextLine();
-		} while (isvalidDate(usrDate, fmtValid) != true);
+				clavier.nextLine();
+				String usrDate;
+				String fmtValid = "yyyy-mm-dd";
+				do {
+					System.out.println("Saisir une date au format (YYYY-MM-DD)");
+					usrDate = clavier.nextLine();
+				} while (isvalidDate(usrDate, fmtValid) != true);
 
-		p.setDateP(usrDate);
+				p.setDateP(usrDate);
 
-		new PaiementDao().save(p);
+				new PaiementDao().save(p);
+
+			} catch (InputMismatchException e) {
+				err = true;
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				// clavier.nextInt();
+			}
+		} while (err);
 
 	}
 
 	// =============================== FUUNCTION SEARCHING ===============
 	public static void rechercherUnProduit() {
+
 		System.out.println("####### Rechercher un Produit #######");
 		// flash
 		clavier.nextLine();
@@ -587,176 +725,254 @@ public class Main {
 
 	// =============================== DELETING ========================
 	public static void supprimerUnProduit() {
-		if (new ProduitDao().getAllProducts().isEmpty()) {
-			menu();
-		}
-		listeDesProduits();
-		int idP;
+
+		boolean err;
 		do {
-			System.out.println("Saisir l'ID du produit à supp");
-			idP = clavier.nextInt();
-		} while (new ProduitDao().getPrdtById(idP) == null);
+			err = false;
+			try {
+				if (new ProduitDao().getAllProducts().isEmpty())
+					menu();
 
-		Produit prdt = new ProduitDao().getPrdtById(idP);
+				listeDesProduits();
+				int idP;
+				do {
+					System.out.println("Saisir l'ID du produit à supp");
+					idP = clavier.nextInt();
+				} while (new ProduitDao().getPrdtById(idP) == null);
 
-		System.out.println("ATTENTION LES détails et les En_stck ASS SERt SUP 1(CONF)/0(ANN)");
+				Produit prdt = new ProduitDao().getPrdtById(idP);
 
-		int resp = clavier.nextInt();
-		if (resp == 1)
-			new ProduitDao().deletePrdtById(prdt.getId());
-		else if (resp == 0) {
-			System.out.println("NON SUPP");
-			menu();
-		}
+				System.out.println("ATTENTION LES détails et les En_stck ASS SERt SUP 1(CONF)/0(ANN)");
+
+				int resp = clavier.nextInt();
+				if (resp == 1)
+					new ProduitDao().deletePrdtById(prdt.getId());
+				else if (resp == 0) {
+					System.out.println("NON SUPP");
+					menu();
+				}
+
+			} catch (InputMismatchException e) {
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 
 	}
 
 	public static void supprimerUnClient() {
-		if (new ClientDao().getAllClient().isEmpty()) {
-			menu();
-		}
-		listeDesClients();
-		int idC;
+
+		boolean err;
+
 		do {
-			System.out.println("Saisir l'ID du client à sup");
-			idC = clavier.nextInt();
-		} while (new ClientDao().getClientById(idC) == null);
+			err = false;
+			try {
+				if (new ClientDao().getAllClient().isEmpty())
+					menu();
 
-		Client c = new ClientDao().getClientById(idC);
+				listeDesClients();
+				int idC;
+				do {
+					System.out.println("Saisir l'ID du client à sup");
+					idC = clavier.nextInt();
+				} while (new ClientDao().getClientById(idC) == null);
 
-		System.out.println("ATTENTION LES Commandes ASS SERt SUP 1(CONF)/0(ANN)".toUpperCase());
+				Client c = new ClientDao().getClientById(idC);
 
-		int resp = clavier.nextInt();
-		if (resp == 1)
-			new ClientDao().deleteCltById(c.getId());
-		else if (resp == 0) {
-			System.out.println("NON SUPP");
-			menu();
-		}
+				System.out.println("ATTENTION LES Commandes ASS SERt SUP 1(CONF)/0(ANN)".toUpperCase());
+
+				int resp = clavier.nextInt();
+				if (resp == 1)
+					new ClientDao().deleteCltById(c.getId());
+				else if (resp == 0) {
+					System.out.println("NON SUPP");
+					menu();
+				}
+
+			} catch (InputMismatchException e) {
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 
 	}
 
 	public static void supprimerUneCatégorie() {
-		if (new CategorieDao().getAllCat().isEmpty()) {
-			menu();
-		}
-		listeDesCatégories();
-		int idCat;
+
+		boolean err;
 		do {
-			System.out.println("Saisir l'ID d'une des catégorie");
-			idCat = clavier.nextInt();
-		} while (new CategorieDao().getCatById(idCat) == null);
+			err = false;
+			try {
+				if (new CategorieDao().getAllCat().isEmpty())
+					menu();
 
-		Categorie c = new CategorieDao().getCatById(idCat);
+				listeDesCatégories();
+				int idCat;
+				do {
+					System.out.println("Saisir l'ID d'une des catégorie");
+					idCat = clavier.nextInt();
+				} while (new CategorieDao().getCatById(idCat) == null);
 
-		System.out.println("ATTENTION LES PRDTS ASS SERt SUP 1(CONF)/0(ANN)");
+				Categorie c = new CategorieDao().getCatById(idCat);
 
-		int resp = clavier.nextInt();
-		if (resp == 1)
-			new CategorieDao().deleteCatById(c.getId());
-		else if (resp == 0) {
-			System.out.println("NON SUPP");
-			menu();
-		}
+				System.out.println("ATTENTION LES PRDTS ASS SERt SUP 1(CONF)/0(ANN)");
+
+				int resp = clavier.nextInt();
+				if (resp == 1)
+					new CategorieDao().deleteCatById(c.getId());
+				else if (resp == 0) {
+					System.out.println("NON SUPP");
+					menu();
+				}
+			} catch (InputMismatchException e) {
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 	}
 
 	public static void supprimerUneCommande() {
-		if (new CommandeDao().getAllCmde().isEmpty()) {
-			menu();
-		}
-		listeDesCommandes();
-		int idC;
+
+		boolean err;
 		do {
-			System.out.println("Saisir l'ID de la commde à sup");
-			idC = clavier.nextInt();
-		} while (new CommandeDao().getCmdeById(idC) == null);
+			err = false;
+			try {
+				if (new CommandeDao().getAllCmde().isEmpty())
+					menu();
 
-		Commande c = new CommandeDao().getCmdeById(idC);
+				listeDesCommandes();
+				int idC;
+				do {
+					System.out.println("Saisir l'ID de la commde à sup");
+					idC = clavier.nextInt();
+				} while (new CommandeDao().getCmdeById(idC) == null);
 
-		System.out.println("ATTENTION LES pymt et les details ASS SERt SUP 1(CONF)/0(ANN)".toUpperCase());
+				Commande c = new CommandeDao().getCmdeById(idC);
 
-		int resp = clavier.nextInt();
-		if (resp == 1)
-			new CommandeDao().deleteCmdeById(c.getId());
-		else if (resp == 0) {
-			System.out.println("NON SUPP");
-			menu();
-		}
+				System.out.println("ATTENTION LES pymt et les details ASS SERt SUP 1(CONF)/0(ANN)".toUpperCase());
+
+				int resp = clavier.nextInt();
+				if (resp == 1)
+					new CommandeDao().deleteCmdeById(c.getId());
+				else if (resp == 0) {
+					System.out.println("NON SUPP");
+					menu();
+				}
+
+			} catch (InputMismatchException e) {
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 
 	}
 
 	public static void supprimerUnFournisseur() {
-		if (new FournisseurDao().getAllFourni().isEmpty()) {
-			menu();
-		}
-		listeDesFournisseurs();
-		int idC;
+
+		boolean err;
 		do {
-			System.out.println("Saisir l'ID du fournisseur à sup");
-			idC = clavier.nextInt();
-		} while (new FournisseurDao().getfrnsrById(idC) == null);
+			err = false;
+			try {
+				if (new FournisseurDao().getAllFourni().isEmpty())
+					menu();
 
-		Fournisseur fsr = new FournisseurDao().getfrnsrById(idC);
+				listeDesFournisseurs();
+				int idC;
+				do {
+					System.out.println("Saisir l'ID du fournisseur à sup");
+					idC = clavier.nextInt();
+				} while (new FournisseurDao().getfrnsrById(idC) == null);
 
-		System.out.println("ATTENTION LES Ent_en_Stck et les prdts du frnsr ASS SERt SUP 1(CONF)/0(ANN)".toUpperCase());
+				Fournisseur fsr = new FournisseurDao().getfrnsrById(idC);
 
-		int resp = clavier.nextInt();
-		if (resp == 1)
-			new FournisseurDao().deleteFrnrsById(fsr.getId());
-		else if (resp == 0) {
-			System.out.println("NON SUPP");
-			menu();
-		}
+				System.out.println(
+						"ATTENTION LES Ent_en_Stck et les prdts du frnsr ASS SERt SUP 1(CONF)/0(ANN)".toUpperCase());
+
+				int resp = clavier.nextInt();
+				if (resp == 1)
+					new FournisseurDao().deleteFrnrsById(fsr.getId());
+				else if (resp == 0) {
+					System.out.println("NON SUPP");
+					menu();
+				}
+
+			} catch (InputMismatchException e) {
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 
 	}
 
 	public static void supprimerUneEntréeEnStock() {
-		if (new Entree_stockDao().getAllEntStock().isEmpty()) {
-			menu();
-		}
-		listeDesEntréesEnStock();
-		int idEs;
+
+		boolean err;
 		do {
-			System.out.println("Saisir l'ID de l'ent_stock à sup");
-			idEs = clavier.nextInt();
-		} while (new Entree_stockDao().getEntStckById(idEs) == null);
+			err = false;
+			try {
+				if (new Entree_stockDao().getAllEntStock().isEmpty())
+					menu();
 
-		Entree_stock Es = new Entree_stockDao().getEntStckById(idEs);
+				listeDesEntréesEnStock();
+				int idEs;
+				do {
+					System.out.println("Saisir l'ID de l'ent_stock à sup");
+					idEs = clavier.nextInt();
+				} while (new Entree_stockDao().getEntStckById(idEs) == null);
 
-		System.out.println("ATTENTION L'Entree_Stock sera SUP 1(CONF)/0(ANN)".toUpperCase());
+				Entree_stock Es = new Entree_stockDao().getEntStckById(idEs);
 
-		int resp = clavier.nextInt();
-		if (resp == 1)
-			new Entree_stockDao().deleteEntStcktById(Es.getId());
-		else if (resp == 0) {
-			System.out.println("NON SUPP");
-			menu();
-		}
+				System.out.println("ATTENTION L'Entree_Stock sera SUP 1(CONF)/0(ANN)".toUpperCase());
+
+				int resp = clavier.nextInt();
+				if (resp == 1)
+					new Entree_stockDao().deleteEntStcktById(Es.getId());
+				else if (resp == 0) {
+					System.out.println("NON SUPP");
+					menu();
+				}
+
+			} catch (InputMismatchException e) {
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 
 	}
 
 	public static void supprimerUnPaiement() {
-		if (new PaiementDao().getAllPayment().isEmpty()) {
-			menu();
-		} else
-			listeDesPaiements();
-		int idP;
+
+		boolean err;
 		do {
-			System.out.println("Saisir l'ID de Paiement à sup");
-			idP = clavier.nextInt();
-		} while (new PaiementDao().getPaymtById(idP) == null);
+			err = false;
+			try {
+				if (new PaiementDao().getAllPayment().isEmpty())
+					menu();
+				else
+					listeDesPaiements();
 
-		Paiement p = new PaiementDao().getPaymtById(idP);
+				int idP;
+				do {
+					System.out.println("Saisir l'ID de Paiement à sup");
+					idP = clavier.nextInt();
+				} while (new PaiementDao().getPaymtById(idP) == null);
 
-		System.out.println("ATTENTION Le Paiement sera SUP 1(CONF)/0(ANN)".toUpperCase());
+				Paiement p = new PaiementDao().getPaymtById(idP);
 
-		int resp = clavier.nextInt();
-		if (resp == 1)
-			new PaiementDao().deletePymtById(p.getId());
-		else if (resp == 0) {
-			System.out.println("NON SUPP");
-			menu();
-		}
+				System.out.println("ATTENTION Le Paiement sera SUP 1(CONF)/0(ANN)".toUpperCase());
+
+				int resp = clavier.nextInt();
+				if (resp == 1)
+					new PaiementDao().deletePymtById(p.getId());
+				else if (resp == 0) {
+					System.out.println("NON SUPP");
+					menu();
+				}
+			} catch (InputMismatchException e) {
+				System.err.println("/!\\ Saisir le bon type de donnée demandé !");
+				clavier.nextLine();
+			}
+		} while (err);
 
 	}
 
