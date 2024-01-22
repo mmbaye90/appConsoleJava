@@ -29,6 +29,7 @@ public class Main {
 		// Connexion DB
 		Db.connect();
 
+		//Menu
 		int choix = -1;
 		while (choix != 0) {
 			choix = menu();
@@ -97,20 +98,21 @@ public class Main {
 
 	public static int menu() {
 		try {
+			//Type text-block => String multiligne
 			System.out.println(
 					"""
-								############# MENU ###################################################
-								#  1- ListeDesProduits     | 11- ListeDesCatégories     | 21- SupprimerUnFournisseur
-								#  2- AjouterUnProduit	   | 12- AjouterUneCatégorie    | 22- RechercherUnFournisseur
-								#  3- ModifierUnProduit    | 13- ModifierUneCatégorie   | 23- ListeDesEntréesEnStock
-								#  4- SupprimerUnProduit   | 14- SupprimerUneCatégorie  | 24- AjouterUneEntréeEnStock
-								#  5- RechercherUnProduit  | 15- ListeDesCommandes      | 25- SupprimerUneEntréeEnStock
-								#  6- ListeDesClients      | 16- PasserUneCommande      | 26- ListeDesPaiements
-								#  7- AjouterUnClient 	   | 17- SupprimerUneCommande   | 27- EffectuerUnPaiement
-								#  8- ModifierUnClient     | 18- ListeDesFournisseurs   | 28- ModifierUnPaiement
-								#  9- SupprimerUnClient    | 19- AjouterUnFournisseur   | 29- SupprimerUnPaiement
-								#  10- RechercherUnClient  | 20- ModifierUnFournisseur  | 0- Quitter
-								############# Choix ###################################################
+								#################################### MENU ################################################
+								||  1- ListeDesProduits     | 11- ListeDesCatégories     | 21- SupprimerUnFournisseur	 ||
+								||  2- AjouterUnProduit	    | 12- AjouterUneCatégorie    | 22- RechercherUnFournisseur   || 
+								||  3- ModifierUnProduit    | 13- ModifierUneCatégorie   | 23- ListeDesEntréesEnStock    ||
+								||  4- SupprimerUnProduit   | 14- SupprimerUneCatégorie  | 24- AjouterUneEntréeEnStock   ||
+								||  5- RechercherUnProduit  | 15- ListeDesCommandes      | 25- SupprimerUneEntréeEnStock ||
+								||  6- ListeDesClients      | 16- PasserUneCommande      | 26- ListeDesPaiements         ||
+								||  7- AjouterUnClient 	    | 17- SupprimerUneCommande   | 27- EffectuerUnPaiement       ||
+								||  8- ModifierUnClient     | 18- ListeDesFournisseurs   | 28- ModifierUnPaiement        ||
+								||  9- SupprimerUnClient    | 19- AjouterUnFournisseur   | 29- SupprimerUnPaiement       ||
+								||  10- RechercherUnClient  | 20- ModifierUnFournisseur  | 0- Quitter                    ||
+								#################################### CHOIX ###############################################
 							""");
 			int c = clavier.nextInt();
 			return c;
@@ -128,6 +130,7 @@ public class Main {
 		if (pdao.getAllProducts().isEmpty()) {
 			System.out.println("Liste des produits vide".toUpperCase());
 		} else
+			//Utilisation d'une expression lambda ou fonctions lambdas avec le méth ForEach()
 			pdao.getAllProducts().forEach((p) -> System.out.println(p));
 	}
 
@@ -147,7 +150,8 @@ public class Main {
 		} else {
 			new CategorieDao().getAllCat().forEach((cat) -> {
 				System.out.println(" {id : " + cat.getId() + " ,titre :" + cat.getTitre() + " ,nbPrdt : "
-						+ new ProduitDao().getCountprdByIdCat(cat.getId()) + " }");
+						+ new ProduitDao().getCountprdByIdCat(cat.getId()) + " }");//instanciation directe pour utiliser la meth getCountprdByIdCat
+						//Pour afficher le nombre de produit
 			});
 		}
 	}
@@ -186,6 +190,7 @@ public class Main {
 
 	// =================================== ADDING ============================
 	public static void ajouterUnProduit() {
+		//Levée d'exection (InputMistMatch) => contrôle des types de saisie
 		boolean err;
 		do {
 			err = false;
@@ -200,10 +205,12 @@ public class Main {
 				System.out.println("Prix du produit à ajouter");
 				prdt.setPrix(clavier.nextFloat());
 
+				//Affichage Liste de catégories
 				new CategorieDao().getAllCat().forEach((cat) -> {
 					System.out.println("{ id : " + cat.getId() + " ,titre : " + cat.getTitre() + " }");
 				});
 
+				//Récupération de l'ID
 				int idCat;
 				do {
 					System.out.println("Saisir un des ID des catégories ci dessus");
@@ -223,6 +230,8 @@ public class Main {
 	}
 
 	public static void ajouterUnClient() {
+
+		//Levée d'exection (InputMistMatch) => contrôle des types de saisie
 		boolean err;
 		do {
 			try {
@@ -276,6 +285,7 @@ public class Main {
 
 				cmd.setDateF(usrDate);
 
+				//Affichage à l'utilisateur des ID client à saisir
 				System.out.println("===== Liste des ID des clients =========");
 				new ClientDao().getAllClient().forEach((cl) -> {
 					System.out.println("{id : " + cl.getId() + ",prénom :" + cl.getPrenom() + " }");
