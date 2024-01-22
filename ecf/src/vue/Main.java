@@ -29,7 +29,7 @@ public class Main {
 		// Connexion DB
 		Db.connect();
 
-		//Menu
+		// Menu
 		int choix = -1;
 		while (choix != 0) {
 			choix = menu();
@@ -98,12 +98,12 @@ public class Main {
 
 	public static int menu() {
 		try {
-			//Type text-block => String multiligne
+			// Type text-block => String multiligne
 			System.out.println(
 					"""
 								#################################### MENU ################################################
 								||  1- ListeDesProduits     | 11- ListeDesCatégories     | 21- SupprimerUnFournisseur	 ||
-								||  2- AjouterUnProduit	    | 12- AjouterUneCatégorie    | 22- RechercherUnFournisseur   || 
+								||  2- AjouterUnProduit	    | 12- AjouterUneCatégorie    | 22- RechercherUnFournisseur   ||
 								||  3- ModifierUnProduit    | 13- ModifierUneCatégorie   | 23- ListeDesEntréesEnStock    ||
 								||  4- SupprimerUnProduit   | 14- SupprimerUneCatégorie  | 24- AjouterUneEntréeEnStock   ||
 								||  5- RechercherUnProduit  | 15- ListeDesCommandes      | 25- SupprimerUneEntréeEnStock ||
@@ -130,7 +130,8 @@ public class Main {
 		if (pdao.getAllProducts().isEmpty()) {
 			System.out.println("Liste des produits vide".toUpperCase());
 		} else
-			//Utilisation d'une expression lambda ou fonctions lambdas avec le méth ForEach()
+			// Utilisation d'une expression lambda ou fonctions lambdas avec le méth
+			// ForEach()
 			pdao.getAllProducts().forEach((p) -> System.out.println(p));
 	}
 
@@ -150,8 +151,10 @@ public class Main {
 		} else {
 			new CategorieDao().getAllCat().forEach((cat) -> {
 				System.out.println(" {id : " + cat.getId() + " ,titre :" + cat.getTitre() + " ,nbPrdt : "
-						+ new ProduitDao().getCountprdByIdCat(cat.getId()) + " }");//instanciation directe pour utiliser la meth getCountprdByIdCat
-						//Pour afficher le nombre de produit
+						+ new ProduitDao().getCountprdByIdCat(cat.getId()) + " }");// instanciation directe pour
+																					// utiliser la meth
+																					// getCountprdByIdCat
+				// Pour afficher le nombre de produit
 			});
 		}
 	}
@@ -190,7 +193,7 @@ public class Main {
 
 	// =================================== ADDING ============================
 	public static void ajouterUnProduit() {
-		//Levée d'exection (InputMistMatch) => contrôle des types de saisie
+		// Levée d'exection (InputMistMatch) => contrôle des types de saisie
 		boolean err;
 		do {
 			err = false;
@@ -205,12 +208,12 @@ public class Main {
 				System.out.println("Prix du produit à ajouter");
 				prdt.setPrix(clavier.nextFloat());
 
-				//Affichage Liste de catégories
+				// Affichage Liste de catégories
 				new CategorieDao().getAllCat().forEach((cat) -> {
 					System.out.println("{ id : " + cat.getId() + " ,titre : " + cat.getTitre() + " }");
 				});
 
-				//Récupération de l'ID
+				// Récupération de l'ID Cat
 				int idCat;
 				do {
 					System.out.println("Saisir un des ID des catégories ci dessus");
@@ -231,7 +234,7 @@ public class Main {
 
 	public static void ajouterUnClient() {
 
-		//Levée d'exection (InputMistMatch) => contrôle des types de saisie
+		// Levée d'exection (InputMistMatch) => contrôle des types de saisie
 		boolean err;
 		do {
 			try {
@@ -285,7 +288,7 @@ public class Main {
 
 				cmd.setDateF(usrDate);
 
-				//Affichage à l'utilisateur des ID client à saisir
+				// Affichage à l'utilisateur des ID client à saisir
 				System.out.println("===== Liste des ID des clients =========");
 				new ClientDao().getAllClient().forEach((cl) -> {
 					System.out.println("{id : " + cl.getId() + ",prénom :" + cl.getPrenom() + " }");
@@ -356,7 +359,11 @@ public class Main {
 			err = false;
 			try {
 				System.out.println("############# Effectuer un paiement ###############");
+				// Affichage Liste des commandes pour inviter à l'utilisateur de saisir l'ID
+				// comde
 				listeDesCommandes();
+
+				// Saisie obligatoire de l'ID Commande
 				int idC;
 				do {
 					System.out.println("Choisir impérativement un des ID des commandes".toUpperCase());
@@ -420,7 +427,7 @@ public class Main {
 				} while (new ProduitDao().getPrdtById(idPdt) == null);
 				Es.setId_produit(idPdt);
 
-				// Afficher au user ID des fournisseurs
+				// Afficher à l'utilisateur ID des fournisseurs
 				System.out.println("Liste des fournisseurs");
 				new FournisseurDao().getAllFourni().forEach((frsr) -> {
 					System.out.println("{ id :" + frsr.getId() + " ,nom :" + frsr.getNom() + " }");
@@ -464,11 +471,14 @@ public class Main {
 			err = false;
 			try {
 				System.out.println("####### Modifier un Produit #######");
+
+				// Affichage à l'utilisateur ID des Produits à modifier
 				System.out.println("Voici les Produits disponibles pour la modification");
 				new ProduitDao().getAllProducts().forEach((p) -> {
 					System.out.println("{ id : " + p.getId() + " ,titre :" + p.getTitre() + " }");
 				});
 
+				// Saisie obligatoire de l'ID produit
 				int idP;
 				do {
 					System.out.println("Saisir impérativement un des ID du produit ci dessus".toUpperCase());
@@ -516,12 +526,14 @@ public class Main {
 			err = false;
 			try {
 				System.out.println("####### Modifier un Client #######");
+
+				// Affichage à l'utilisateur ID Client à modifier
 				System.out.println("Liste des client à Modofier exple id/prenom");
 				new ClientDao().getAllClient().forEach((cl) -> {
 					System.out.println("{ id : " + cl.getId() + " , prenom :" + cl.getPrenom() + " }");
 				});
 
-				// Verif ID saisi par user
+				// Saisie obligatire de l'utilisateur
 				int idUser;
 				do {
 					System.out.println("Donnez l'ID du client à modifier");
@@ -693,13 +705,16 @@ public class Main {
 
 	}
 
-	// =============================== FUUNCTION SEARCHING ===============
+	// =============================== FUUNCTION SEARCHING
+	// ===============================
 	public static void rechercherUnProduit() {
 
 		System.out.println("####### Rechercher un Produit #######");
 		// flash
 		clavier.nextLine();
 		System.out.println("Saisir le titre du Produit");
+
+		// instanciation directe de PrdtDao pour acceder à al méth rech
 		new ProduitDao().rechPrdct(clavier.nextLine()).forEach((p) -> {
 			System.out.println("{ id : " + p.getId() + ",titre :" + p.getTitre() + " ,prix : " + p.getPrix() +
 					" id_cat :" + new CategorieDao().getCatById(p.getId_categorie()).getId() + " => " +
@@ -740,10 +755,13 @@ public class Main {
 		do {
 			err = false;
 			try {
+				// Si prdt vide afficher le Menu
 				if (new ProduitDao().getAllProducts().isEmpty())
 					menu();
-
+				// Sinon afficher La liste des prdt et demander à l'utilisateur l'ID
 				listeDesProduits();
+
+				// Saisie obligatoire de l'ID prdt
 				int idP;
 				do {
 					System.out.println("Saisir l'ID du produit à supp");
@@ -988,8 +1006,14 @@ public class Main {
 
 	// =============================== UTILS FUNCTIONS ============
 	public static boolean isvalidDate(String d, String formatDate) {
+		// instanciation de la Classe SimpleDateFormat pour utliser la
+		// MéthSimpleDateFormat
+		// qui prend en argument une String
 		SimpleDateFormat df = new SimpleDateFormat(formatDate);
+
 		try {
+			// instanciation de la classe Date et l'utilisation de sa méth
+			// non static parse qui prend en arg une String
 			Date dte = df.parse(d);
 			System.out.println(dte);
 			return true;
